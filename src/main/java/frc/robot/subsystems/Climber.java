@@ -42,6 +42,12 @@ public class Climber extends SubsystemBase {
     _climbSolenoid1.set(Value.kReverse);
     _climbSolenoid2.set(Value.kReverse);
   }
+
+  public void offSolenoids(){
+    //turn both solenoids off
+    _climbSolenoid1.set(Value.kOff);
+    _climbSolenoid2.set(Value.kOff);
+  }
   
   public void runWinch(double speed){
     if (_climbMotor != null) {

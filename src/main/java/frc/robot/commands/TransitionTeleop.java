@@ -14,6 +14,7 @@ import frc.robot.subsystems.Transition;
 public class TransitionTeleop extends CommandBase {
   private Transition _transition;
   private final Joystick _manipulatorControl;
+  private int helixSpeed = 0.8;
   /**
    * Creates a new TransitionTelop.
    */
@@ -32,13 +33,15 @@ public class TransitionTeleop extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if ((_manipulatorControl.getRawAxis(2) < 0.8 && _manipulatorControl.getRawAxis(3) < 0.8) 
-          || (_manipulatorControl.getRawAxis(2) > 0.8 && _manipulatorControl.getRawAxis(3) > 0.8)) {
-      _transition.setTransitionMotor(0);
-    } else if (_manipulatorControl.getRawAxis(3) >= 0.8) { 
-      _transition.setTransitionMotor(0.6);
-    } else if (_manipulatorControl.getRawAxis(2) >= 0.8) {
-      _transition.setTransitionMotor(-0.6);
+    //axis 2 and 3 are POV hat on manipulator controller
+    if ((_manipulatorControl.getRawAxis(2) < helixSpeed && _manipulatorControl.getRawAxis(3) < helixSpeed) 
+          || (_manipulatorControl.getRawAxis(2) > helixSpeed && _manipulatorControl.getRawAxis(3) > helixSpeed)) {
+      //if both axes are pressed, they cancel: 
+            _transition.setTransitionMotor(0);
+    } else if (_manipulatorControl.getRawAxis(3) >= helixSpeed) { 
+      _transition.setTransitionMotor(helixSpeed);
+    } else if (_manipulatorControl.getRawAxis(2) >= helixSpeed) {
+      _transition.setTransitionMotor(-helixSpeed);
     }
   }
 
