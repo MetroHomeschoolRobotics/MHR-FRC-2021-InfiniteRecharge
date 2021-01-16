@@ -40,7 +40,6 @@ public class ShootMacro extends CommandBase {
   public void execute() {
     _shooter.setShooter(0.8);// was 0.75; this is the speed the shooter shoots
     Timer.delay(2);// time to spin shooter up; TODO: attempt to minimize
-    //Use has elapsed if it fails: what does this mean?????????????????????????
     _transition.setTransitionMotor(1);
     _magazine.setMagazine(0.8);
     _intake.setIntake(-0.8);

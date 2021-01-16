@@ -9,6 +9,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeLifter;
+import edu.wpi.first.wpilibj.Timer;
+
 
 public class MoveIntake extends CommandBase {
   private IntakeLifter _intakeLifter;
@@ -34,7 +36,12 @@ public class MoveIntake extends CommandBase {
     if (state == 1){
       _intakeLifter.setIntakeLifterUp();
     } else if (state == -1 || state == 0){
+      //set pistons to push intake down
       _intakeLifter.setIntakeLifterDown();
+      /*      //let them run for 1/4 second
+      Timer.sleep(.25);
+      //turn the pistons off to avoid stressing intake against wire
+      _intakeLifter.setIntakeLifterOff();*/
     }
   }
 

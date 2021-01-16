@@ -50,6 +50,9 @@ public class DriveLimelight extends CommandBase {
   @Override
   public void initialize() {
     SmartDashboard.putBoolean("Beginning DriveLimelight", true);
+    NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+    //activate vision processing mode on limelight
+    limelightTable.getEntry("camMode").setNumber(0);
   }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -152,7 +155,10 @@ public class DriveLimelight extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
     SmartDashboard.putBoolean("Beginning DriveLimelight", false);
+    //change limelight to driver view mode
+    limelightTable.getEntry("camMode").setNumber(1);
     _tankDrive.move(0, 0, 0);
   }
 

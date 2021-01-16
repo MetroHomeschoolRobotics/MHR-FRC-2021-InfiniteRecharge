@@ -49,7 +49,10 @@ public class DriveLimelightTrench extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
     SmartDashboard.putBoolean("Beginning DriveLimelight", true);
+        //change limelight to vision processing mode
+        limelightTable.getEntry("camMode").setNumber(0);
   }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -152,7 +155,10 @@ public class DriveLimelightTrench extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
     SmartDashboard.putBoolean("Beginning DriveLimelight", false);
+        //change limelight to driver view mode
+        limelightTable.getEntry("camMode").setNumber(1);
   }
 
   // Returns true when the command should end.

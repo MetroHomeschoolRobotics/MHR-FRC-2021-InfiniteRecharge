@@ -14,7 +14,8 @@ import frc.robot.subsystems.Transition;
 public class TransitionTeleop extends CommandBase {
   private Transition _transition;
   private final Joystick _manipulatorControl;
-  private double helixSpeed = 0.8;
+  private double speed = 0.6;
+  private double threshold = 0.8;
   /**
    * Creates a new TransitionTelop.
    */
@@ -33,15 +34,17 @@ public class TransitionTeleop extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //axis 2 and 3 are POV hat on manipulator controller
-    if ((_manipulatorControl.getRawAxis(2) < helixSpeed && _manipulatorControl.getRawAxis(3) < helixSpeed) 
-          || (_manipulatorControl.getRawAxis(2) > helixSpeed && _manipulatorControl.getRawAxis(3) > helixSpeed)) {
+    //axis 2 and 3 are analog triggers
+    if ((_manipulatorControl.getRawAxis(2) < threshold && _manipulatorControl.getRawAxis(3) < threshold) 
+          || (_manipulatorControl.getRawAxis(2) > threshold && _manipulatorControl.getRawAxis(3) > threshold)) {
       //if both axes are pressed, they cancel: 
             _transition.setTransitionMotor(0);
-    } else if (_manipulatorControl.getRawAxis(3) >= helixSpeed) { 
-      _transition.setTransitionMotor(helixSpeed);
-    } else if (_manipulatorControl.getRawAxis(2) >= helixSpeed) {
-      _transition.setTransitionMotor(-helixSpeed);
+    //if right trigger is pressed beyond threshold transition spins forward
+    } else if (_manipulatorControl.getRawAxis(3) >= threshold) { 
+      _transition.setTransitionMotor(speed);
+    //if left trigger is pressed beyond threshold transition spins in reverse
+    } else if (_manipulatorControl.getRawAxis(2) >= threshold) {
+      _transition.setTransitionMotor(-speed);
     }
   }
 
