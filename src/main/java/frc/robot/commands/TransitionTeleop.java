@@ -14,7 +14,7 @@ import frc.robot.subsystems.Transition;
 public class TransitionTeleop extends CommandBase {
   private Transition _transition;
   private final Joystick _manipulatorControl;
-  private int helixSpeed = 0.8;
+  private double helixSpeed = 0.8;
   /**
    * Creates a new TransitionTelop.
    */
