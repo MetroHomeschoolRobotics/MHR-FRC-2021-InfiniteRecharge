@@ -81,7 +81,7 @@ public class DriveLimelight extends CommandBase {
       //turn Right
       x = Math.abs(tX/xDivide);
     }
-    if (tY < -threshold){
+    /*if (tY < -threshold){
       //drive forward
       y = -Math.abs(tY/yDivide);//was positive
     } else if (tY > threshold){
@@ -99,7 +99,7 @@ public class DriveLimelight extends CommandBase {
     }
     if (y < -speedThreshold){
       y = -speedThreshold;
-    }
+    }*/
 
 
     //y = Math.abs(tX/27);
