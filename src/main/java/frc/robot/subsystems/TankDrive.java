@@ -29,7 +29,19 @@ public class TankDrive extends DriveSystemBase {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
   //}
+    @Override
+    public double getLeftEncoder() {
+      // TODO Auto-generated method stub
+      return 0;
+    }
 
+    @Override
+    public double getRightEncoder() {
+      // TODO Auto-generated method stub
+      return 0;
+    }
+
+    
   @Override
   public void move(double x, double y, double z){
     _frontLeft.set(-y+x);

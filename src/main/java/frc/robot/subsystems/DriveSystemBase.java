@@ -17,4 +17,7 @@ public abstract class DriveSystemBase extends SubsystemBase {
   // here. Call these from Commands.
 
   public abstract void move(double x, double y, double z);
+  public abstract double getLeftEncoder();
+  public abstract double getRightEncoder();
+
 }
