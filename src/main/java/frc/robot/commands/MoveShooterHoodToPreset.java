@@ -54,6 +54,9 @@ _shooter.setHoodMotor(0);
     } else if (_direction == 1 && _currentAngle <= _angle) {
       return true;
     }
+    if(Math.abs(_currentAngle-_angle)<5){
+      return true;
+    } 
     return false;
   }
 }
