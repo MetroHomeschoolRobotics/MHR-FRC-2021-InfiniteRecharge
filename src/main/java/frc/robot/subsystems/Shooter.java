@@ -35,6 +35,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called oncex per scheduler run
+SmartDashboard.putNumber("Current Potentiometer Value", _hoodPot.get());
   }
 
 public void setHoodMotor(double speed) {
