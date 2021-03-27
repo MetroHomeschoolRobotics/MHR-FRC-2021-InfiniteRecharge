@@ -7,11 +7,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.pixy2.Pixy2;
 import frc.robot.pixy2.links.*;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
@@ -82,7 +84,7 @@ public class Robot extends TimedRobot {
       new CANSparkMax(RobotMap.LeftRearMotor, MotorType.kBrushless),
       new CANSparkMax(RobotMap.RightRearMotor, MotorType.kBrushless));
     Intake intake = new Intake(new Spark(RobotMap.IntakeMotor));
-    Shooter shooter = new Shooter(new CANSparkMax(RobotMap.ShooterMotor1, MotorType.kBrushless), new CANSparkMax(RobotMap.ShooterMotor2, MotorType.kBrushless));
+    Shooter shooter = new Shooter(new CANSparkMax(RobotMap.ShooterMotor1, MotorType.kBrushless), new CANSparkMax(RobotMap.ShooterMotor2, MotorType.kBrushless), new Spark(RobotMap.hoodMotorPort), new AnalogPotentiometer(RobotMap.hoodPotPort, RobotMap.hoodPotFullMotionAngle, RobotMap.hoodPotZeroAngle));
     Magazine magazine = new Magazine(new TalonSRX(RobotMap.MagazineMotor));
     ControlPanel controlPanel = new ControlPanel(new Spark(RobotMap.ControlPanelSpinMotor));
     Transition transition = new Transition(new Spark(RobotMap.TransitionMotor));

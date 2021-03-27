@@ -171,6 +171,10 @@ public class OI {
     _autoChooser.addOption("No auto", new WaitCommand(15));
 
   SmartDashboard.putData("AutoMode", _autoChooser);
+
+
+  SmartDashboard.putNumber("Hood Angle", 20);
+  SmartDashboard.putData("Move Hood", new MoveShooterHoodToPreset(SmartDashboard.getNumber("Hood Angle", 20), _shooter));
 }
   
   public CommandBase getAutonomousCommand(){
@@ -191,6 +195,11 @@ public class OI {
   
   public CommandBase getDriveCommand(){
     return _driveTank;
+  }
+
+
+  public double getHoodSmartDashboardAngle() {
+    return SmartDashboard.getNumber("Hood Angle", 20);
   }
   
   //// CREATING BUTTONS

@@ -29,6 +29,11 @@ public class RobotMap {
   public static int ControlPanelLiftMotor = 3;//Spark
   public static int ControlPanelLiftEncoderA = 0;
   public static int ControlPanelLiftEncoderB = 1;
+  public static int hoodMotorPort = 4;
+  public static int hoodPotPort = 0;
+  public static int hoodPotFullMotionAngle = 300;
+  public static int hoodPotZeroAngle = 0;
+
   //public static int Compressor;//Pneumatic Compressor
   //public static int IntakeSolenoid1 = 0;//Pneumatic Solenoid
   //public static int IntakeSolenoid2 = 1;//Pneumatic solenoid
