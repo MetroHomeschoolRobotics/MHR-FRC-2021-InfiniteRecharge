@@ -80,39 +80,52 @@ public class OI {
   public void init() {
     Joystick driverControl = new Joystick(0);
     Joystick manipulatorControl = new Joystick(1);
+
     _driveTank = new DriveTank(_tankDrive, driverControl, manipulatorControl);
     _transitionTeleop = new TransitionTeleop(_transition, manipulatorControl);
     _climbWinch = new ClimbWinch(_climber, driverControl);
     //_runIntake = new RunIntake(_intake, driverControl);
    // _shooterAxis = new Joystick(driverControl, 3);
+
     JoystickButton intakeButton = new JoystickButton(driverControl, 5);
     intakeButton.whileHeld(new RunIntake(_intake, driverControl));
+
     JoystickButton shootOnButton = new JoystickButton(manipulatorControl, 6);
     shootOnButton.whenPressed(new RunShooter(_shooter, manipulatorControl));
+
     JoystickButton reverseIntakeButton = new JoystickButton(driverControl, 6);
     reverseIntakeButton.whileHeld(new ReverseIntake(_intake, driverControl));
-/*    JoystickButton controlPanelButton = new JoystickButton(driverControl, 8); // on the start button
-    controlPanelButton.toggleWhenPressed(new RunControlPanel(_controlPanel));*/
+
+    JoystickButton HoodAdjustmentButton = new JoystickButton(driverControl, 8); // Button 8 = Start Button
+    HoodAdjustmentButton.whileHeld(new RunControlPanel(_controlPanel));
+
     JoystickButton targetButton = new JoystickButton(driverControl, 1);
-    targetButton.whileHeld(new DriveLimelight(_tankDrive));//was toggleWhenPressed
+    targetButton.whileHeld(new DriveLimelight(_tankDrive));
+
     JoystickButton targetTrenchButton = new JoystickButton(driverControl, 2);
     targetTrenchButton.whileHeld(new DriveLimelightTrench(_tankDrive));
+
     JoystickButton shootMacroButton = new JoystickButton(manipulatorControl, 1);
     shootMacroButton.whenPressed(new ShootMacro(_intake, _magazine, _shooter, _transition));
+
     JoystickButton cancelAllButton = new JoystickButton(manipulatorControl, 7);
     cancelAllButton.whileHeld(new CancelAll(_controlPanel, _intake, _magazine, _shooter, _tankDrive));
     //syntax from wpilib to make one command run at the end of another: 
     //JoystickButton targetShootButton = new JoystickButton(driverControl, 2);
     //targetShootButton.whenPressed(new DriveLimelight(_tankDrive).whenFinished(() -> new ShootMacro(_intake, _magazine, _shooter, _transition)));
+    
     JoystickButton moveIntakeButton = new JoystickButton(driverControl, 4);
     moveIntakeButton.whenPressed(new MoveIntake(_intakeLifter));
+
     JoystickButton activateClimbPistonsButton = new JoystickButton(driverControl, 10);
     activateClimbPistonsButton.whenPressed(new ClimbPistons(_climber));
 
     POVButton magazineForwardButton = new POVButton(manipulatorControl, 90, 0);
     magazineForwardButton.toggleWhenPressed(new RunMagazine(_magazine));
+
     POVButton magazineReverseButton = new POVButton(manipulatorControl, 270, 0);
     magazineReverseButton.toggleWhenPressed(new ReverseMagazine(_magazine));
+    
     POVButton liftControlPanelButton = new POVButton(manipulatorControl, 0, 0);
     liftControlPanelButton.whileHeld(new LiftControlPanel(_controlPanelLift));
   
