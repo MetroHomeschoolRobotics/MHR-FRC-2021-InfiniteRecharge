@@ -12,14 +12,17 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.Servo;
 
 public class Magazine extends SubsystemBase {
   public TalonSRX _magazineMotor;
+  public Servo _hopperServo;
   /**
    * Creates a new Magazine.
    */
-  public Magazine(TalonSRX magazineMotor) {
+  public Magazine(TalonSRX magazineMotor, Servo hopperServo) {
     _magazineMotor = magazineMotor;
+    _hopperServo = hopperServo;
   }
 
   @Override
@@ -30,5 +33,9 @@ public class Magazine extends SubsystemBase {
   public void setMagazine(double speed){
     _magazineMotor.set(ControlMode.PercentOutput, 0-speed);
     SmartDashboard.putNumber("Magazine", speed);
+  }
+  public void moveHopperServo(int angle) {
+    //angle must be within 0 to 170
+    _hopperServo.setAngle(angle);
   }
 }

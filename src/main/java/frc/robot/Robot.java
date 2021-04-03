@@ -22,6 +22,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Servo;
 
 //import java.util.ResourceBundle.Control;
 
@@ -85,7 +86,7 @@ public class Robot extends TimedRobot {
       new CANSparkMax(RobotMap.RightRearMotor, MotorType.kBrushless));
     Intake intake = new Intake(new Spark(RobotMap.IntakeMotor));
     Shooter shooter = new Shooter(new CANSparkMax(RobotMap.ShooterMotor1, MotorType.kBrushless), new CANSparkMax(RobotMap.ShooterMotor2, MotorType.kBrushless), new Spark(RobotMap.hoodMotorPort), new AnalogPotentiometer(RobotMap.hoodPotPort, RobotMap.hoodPotFullMotionAngle, RobotMap.hoodPotZeroAngle));
-    Magazine magazine = new Magazine(new TalonSRX(RobotMap.MagazineMotor));
+    Magazine magazine = new Magazine(new TalonSRX(RobotMap.MagazineMotor), new Servo(RobotMap.hopperServoPort));
     ControlPanel controlPanel = new ControlPanel(new Spark(RobotMap.ControlPanelSpinMotor));
     Transition transition = new Transition(new Spark(RobotMap.TransitionMotor));
     IntakeLifter intakeLifter = new IntakeLifter(new DoubleSolenoid(0, 1), new DoubleSolenoid(2, 3));

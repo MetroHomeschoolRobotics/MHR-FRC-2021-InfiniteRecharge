@@ -33,6 +33,7 @@ public class RobotMap {
   public static int hoodPotPort = 0;
   public static int hoodPotFullMotionAngle = 300;
   public static int hoodPotZeroAngle = 0;
+  public static int hopperServoPort = 5;
 
   //public static int Compressor;//Pneumatic Compressor
   //public static int IntakeSolenoid1 = 0;//Pneumatic Solenoid
