@@ -190,6 +190,7 @@ moveHopperButton.whenPressed(new MoveHopperDown(_magazine));
 
 
   SmartDashboard.putNumber("Hood Angle", 20);
+  SmartDashboard.putNumber("shooter speed (0-1)", .62);
   SmartDashboard.putData("Move Hood", new MoveShooterHoodToPreset(SmartDashboard.getNumber("Hood Angle", 20), _shooter));
 }
   

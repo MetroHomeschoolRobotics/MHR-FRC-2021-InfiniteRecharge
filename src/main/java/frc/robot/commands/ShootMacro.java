@@ -17,6 +17,7 @@ public class ShootMacro extends CommandBase {
   private final Magazine _magazine;
   private final Shooter _shooter;
   private final Transition _transition;
+  private double _shooterSpeed = .8;
   /**
    * Creates a new ShootMacro.
    */
@@ -26,6 +27,7 @@ public class ShootMacro extends CommandBase {
     _magazine = magazine;
     _shooter = shooter;
     _transition = transition;
+    
     addRequirements(_intake, _magazine, _shooter, _transition);
   }
 
@@ -33,12 +35,14 @@ public class ShootMacro extends CommandBase {
   @Override
   public void initialize() {
     SmartDashboard.putBoolean("ShootMacro Running", true);
+    _shooterSpeed = SmartDashboard.getNumber("shooter speed (0-1)", .8);
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _shooter.setShooter(0.8);// was 0.75; this is the speed the shooter shoots
+    _shooter.setShooter(_shooterSpeed);// was 0.75; this is the speed the shooter shoots
     Timer.delay(2);// time to spin shooter up; TODO: attempt to minimize time taken by this command
     _transition.setTransitionMotor(1);
     _magazine.setMagazine(0.8);

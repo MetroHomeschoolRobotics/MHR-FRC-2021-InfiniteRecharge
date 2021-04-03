@@ -16,6 +16,8 @@ import frc.robot.subsystems.Shooter;
 public class RunShooter extends CommandBase {
   private final Shooter _shooter;
   private final Joystick _manipulatorControl;
+  private double _shooterSpeed = .62;
+
   /**
    * Creates a new RunShooter.
    */
@@ -29,6 +31,8 @@ public class RunShooter extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    
+    _shooterSpeed = SmartDashboard.getNumber("shooter speed (0-1)", .62);
     SmartDashboard.putBoolean("Shooting", true);
     _manipulatorControl.setRumble(RumbleType.kLeftRumble, 0); //TODO turn on for compeition. 
   }
@@ -36,7 +40,7 @@ public class RunShooter extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _shooter.setShooter(0.62);//was 0.75
+    _shooter.setShooter(_shooterSpeed);//was 0.75
   }
 
   // Called once the command ends or is interrupted.
