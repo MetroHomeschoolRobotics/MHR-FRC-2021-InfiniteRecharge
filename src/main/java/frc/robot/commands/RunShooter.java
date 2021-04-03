@@ -30,7 +30,7 @@ public class RunShooter extends CommandBase {
   @Override
   public void initialize() {
     SmartDashboard.putBoolean("Shooting", true);
-    _manipulatorControl.setRumble(RumbleType.kLeftRumble, 1);
+    _manipulatorControl.setRumble(RumbleType.kLeftRumble, 0); //TODO turn on for compeition. 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
