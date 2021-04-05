@@ -19,14 +19,14 @@ public class AutoDriveArray extends CommandBase {
   DriveSystemBase _tankDrive;
 
 private int _index = 0;
-private int millistep = 0;
-private ArrayList<Double> movementArrayX = new ArrayList<Double>(Arrays.asList(.1,.1,.1,.1,.1));//TODO: Change this value to be the actual driver joystick values
-private ArrayList<Double> movementArrayY = new ArrayList<Double>(Arrays.asList(.1,.1,.1,.1,.1));//TODO: Change this value to be the actual driver joystick values
-
+//private ArrayList<Double> movementArrayX = new ArrayList<Double>(Arrays.asList(.1,.1,.1,.1,.1));//TODO: Change this value to be the actual driver joystick values
+//private ArrayList<Double> movementArrayY = new ArrayList<Double>(Arrays.asList(.1,.1,.1,.1,.1));//TODO: Change this value to be the actual driver joystick values
+private ArrayList<Double> _movementArrayX;
+private ArrayList<Double> _movementArrayY;
   /**
    * Creates a new AutoDrive.
    */
-  public AutoDriveArray(DriveSystemBase tankDrive) {
+  public AutoDriveArray(DriveSystemBase tankDrive, ArrayList<Double> movementArrayX, ArrayList<Double> movementArrayY) {
     // Use addRequirements() here to declare subsystem dependencies.
     _tankDrive = tankDrive;
 
@@ -45,7 +45,7 @@ private ArrayList<Double> movementArrayY = new ArrayList<Double>(Arrays.asList(.
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      _tankDrive.move(movementArrayX.get(_index), movementArrayY.get(_index),0);
+      _tankDrive.move(_movementArrayX.get(_index), _movementArrayY.get(_index),0);
       _index+=1;
   }
 
@@ -60,7 +60,7 @@ private ArrayList<Double> movementArrayY = new ArrayList<Double>(Arrays.asList(.
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(_index >= movementArrayX.size()) {
+    if(_index >= _movementArrayX.size()) {
       return true;
     } else {
       return false;

@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 //import edu.wpi.first.wpilibj.XboxController.Button;
@@ -21,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 import frc.robot.pixy2.Pixy2;
+import java.util.*;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -100,10 +103,13 @@ public class OI {
     HoodAdjustmentButton.whileHeld(new RunControlPanel(_controlPanel));
 
     JoystickButton targetButton = new JoystickButton(driverControl, 1);
-    targetButton.whileHeld(new DriveLimelight(_tankDrive));
+    targetButton.whileHeld(new DriveLimelight(_tankDrive, _shooter, false));
 
-    JoystickButton targetTrenchButton = new JoystickButton(driverControl, 2);
-    targetTrenchButton.whileHeld(new DriveLimelightTrench(_tankDrive));
+    JoystickButton targetWithHoodButton = new JoystickButton(driverControl, 2);
+    targetWithHoodButton.whileHeld(new DriveLimelight(_tankDrive, _shooter, true));
+
+    //JoystickButton targetTrenchButton = new JoystickButton(driverControl, 2);
+    //targetTrenchButton.whileHeld(new DriveLimelightTrench(_tankDrive));
 
     JoystickButton shootMacroButton = new JoystickButton(manipulatorControl, 1);
     shootMacroButton.whenPressed(new ShootMacro(_intake, _magazine, _shooter, _transition));
@@ -164,7 +170,7 @@ moveHopperButton.whenPressed(new MoveHopperDown(_magazine));
 
     _autoChooser.setDefaultOption("3-ball", new SequentialCommandGroup(
       new WaitCommand(0),
-      new DriveLimelight(_tankDrive),
+      new DriveLimelight(_tankDrive, _shooter, false),
       new ShootMacro(_intake, _magazine, _shooter, _transition),
       new AutoDriveTime(_tankDrive, 0, 0.25, 0, 1.5),
       new MoveIntake(_intakeLifter)));
@@ -182,9 +188,11 @@ moveHopperButton.whenPressed(new MoveHopperDown(_magazine));
           new RunMagazine(_magazine)),  
         new SeekTarget(_tankDrive),
         //may add AutoDriveTime to reach initiation line at full speed, decreasing time required
-        new DriveLimelight(_tankDrive),
+        new DriveLimelight(_tankDrive, _shooter, false),
         new ShootMacro(_intake, _magazine, _shooter, _transition)));
     _autoChooser.addOption("No auto", new WaitCommand(15));
+    _autoChooser.addOption("Drive Array", new AutoDriveArray(_tankDrive, new ArrayList<Double>(Arrays.asList(.1,.1,.1)), new ArrayList<Double>(Arrays.asList(.1,.1,.1))));//TODO: Fix these arrays to be an actual drive routine
+    
 
   SmartDashboard.putData("AutoMode", _autoChooser);
 

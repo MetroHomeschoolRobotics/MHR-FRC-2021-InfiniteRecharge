@@ -9,12 +9,14 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSystemBase;
+import frc.robot.subsystems.Shooter;
 // import frc.robot.subsystems.DriveSystemBase;
 // import frc.robot.subsystems.TankDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.subsystems.Shooter;
 
 public class DriveLimelight extends CommandBase {
   //pull data from network tables (communication protocol)
@@ -30,11 +32,14 @@ public class DriveLimelight extends CommandBase {
   int yDivide = 20; //was 27; before that was 40, 37
   double speedThreshold = 0.25;
   double finishThreshold = 0.45;
+  private Shooter _shooter;
+  private boolean _moveHood;
   /**
    * Creates a new DriveLimelight.
    */
-  public DriveLimelight(DriveSystemBase tankDrive) {
+  public DriveLimelight(DriveSystemBase tankDrive, Shooter shooter, boolean moveHood) {
     _tankDrive = tankDrive;
+    _shooter = shooter;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(tankDrive);
   }
@@ -149,7 +154,12 @@ public class DriveLimelight extends CommandBase {
 
     SmartDashboard.putNumber("Left Drive Speed", -y+x);
     SmartDashboard.putNumber("Right Drive Speed", -(y+x));//negated because motors are mirrored
+    if(!_moveHood) {
     _tankDrive.move(x, y, 0);
+    } else {
+      _tankDrive.move(0, y, 0);
+      _shooter.setHoodMotor(x);
+    }
   }
 
   // Called once the command ends or is interrupted.

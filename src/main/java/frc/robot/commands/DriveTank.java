@@ -12,12 +12,16 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import frc.robot.subsystems.TankDrive;
+import java.util.*;
 
 
 public class DriveTank extends CommandBase {
   private DriveSystemBase _tankDrive;
   private Joystick _driverControl;
   private Joystick _manipulatorControl;
+
+  public static ArrayList<Double> recordX = new ArrayList<Double>();
+  public static ArrayList<Double> recordY = new ArrayList<Double>();
 
   double _threshold = 0.2;
   public DriveTank(DriveSystemBase tankDrive, Joystick driverControl, Joystick manipulatorControl) {
@@ -95,6 +99,8 @@ public class DriveTank extends CommandBase {
           x/2,
           y/2,
           0);
+          recordX.add(x/2);
+          recordY.add(y/2); 
     //_driverControl.getRawAxis(2) - _driverControl.getRawAxis(3));
     //}
     // if (_driverControl.getRawButton(6)) {
@@ -117,9 +123,14 @@ public class DriveTank extends CommandBase {
     return false;
   }
 
+  public static void printResults() {
+    SmartDashboard.putString("RecordX", recordX.toString());
+    SmartDashboard.putString("RecordY", recordY.toString());
+  }
   // Called once after isFinished returns true
   @Override
   public void end(boolean interrupted) {
+    
   }
 
   // Called when another command which requires one or more of the same

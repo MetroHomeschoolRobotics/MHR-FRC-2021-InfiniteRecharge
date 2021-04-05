@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.DriveTank;
 import frc.robot.pixy2.Pixy2;
 import frc.robot.pixy2.links.*;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
@@ -23,6 +24,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 //import java.util.ResourceBundle.Control;
 
@@ -120,6 +122,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
     limelightTable.getEntry("ledMode").setNumber(1);
+ DriveTank.printResults();
 
   }
 
