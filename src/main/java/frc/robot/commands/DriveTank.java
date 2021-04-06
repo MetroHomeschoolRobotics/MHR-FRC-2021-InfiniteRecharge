@@ -24,6 +24,7 @@ public class DriveTank extends CommandBase {
   public static ArrayList<Double> recordY = new ArrayList<Double>();
 
   double _threshold = 0.2;
+  private int _timesRun = 0;
   public DriveTank(DriveSystemBase tankDrive, Joystick driverControl, Joystick manipulatorControl) {
     //requires(tankDrive);
     addRequirements(tankDrive);
@@ -35,6 +36,8 @@ public class DriveTank extends CommandBase {
   // Called just before this Command runs the first time
   @Override
   public void initialize() {
+    recordX = new ArrayList<Double>();
+    recordY = new ArrayList<Double>();
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -77,8 +80,8 @@ public class DriveTank extends CommandBase {
         y = (y*y);
       }
       if (_driverControl.getRawAxis(2) > 0.8) {
-        x = x/2;
-        y = y/2;
+        x = x/4;//TODO: Was 2
+        y = y/4;
       }else if (_driverControl.getRawAxis(3) > 0.8) {
         x = 2*x;
         y = 2*y;
@@ -99,8 +102,12 @@ public class DriveTank extends CommandBase {
           x/2,
           y/2,
           0);
+          _timesRun+=1;
+        if(_timesRun%10==0) {
           recordX.add(x/2);
           recordY.add(y/2); 
+        }  
+          
     //_driverControl.getRawAxis(2) - _driverControl.getRawAxis(3));
     //}
     // if (_driverControl.getRawButton(6)) {

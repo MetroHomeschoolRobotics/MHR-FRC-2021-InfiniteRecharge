@@ -123,7 +123,6 @@ public class Robot extends TimedRobot {
     NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
     limelightTable.getEntry("ledMode").setNumber(1);
  DriveTank.printResults();
-
   }
 
   @Override
