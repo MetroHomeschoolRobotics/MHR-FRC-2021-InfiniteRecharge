@@ -29,7 +29,7 @@ public class RobotMap {
   public static int ControlPanelLiftMotor = 3;//Spark
   public static int ControlPanelLiftEncoderA = 0;
   public static int ControlPanelLiftEncoderB = 1;
-  public static int hoodMotorPort = 4;
+  public static int hoodMotorPort = 1;
   public static int hoodPotPort = 0;
   public static int hoodPotFullMotionAngle = 300;
   public static int hoodPotZeroAngle = 0;

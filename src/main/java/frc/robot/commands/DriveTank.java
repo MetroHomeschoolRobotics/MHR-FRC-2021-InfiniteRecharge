@@ -20,8 +20,8 @@ public class DriveTank extends CommandBase {
   private Joystick _driverControl;
   private Joystick _manipulatorControl;
 
-  public static ArrayList<Double> recordX = new ArrayList<Double>();
-  public static ArrayList<Double> recordY = new ArrayList<Double>();
+ // public static ArrayList<Double> recordX = new ArrayList<Double>();
+ // public static ArrayList<Double> recordY = new ArrayList<Double>();
 
   double _threshold = 0.2;
   private int _timesRun = 0;
@@ -36,8 +36,8 @@ public class DriveTank extends CommandBase {
   // Called just before this Command runs the first time
   @Override
   public void initialize() {
-    recordX = new ArrayList<Double>();
-    recordY = new ArrayList<Double>();
+    //recordX = new ArrayList<Double>();
+    //recordY = new ArrayList<Double>();
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -102,11 +102,11 @@ public class DriveTank extends CommandBase {
           x/2,
           y/2,
           0);
-          _timesRun+=1;
+       /*   _timesRun+=1;
         if(_timesRun%10==0) {
           recordX.add(x/2);
           recordY.add(y/2); 
-        }  
+        }  */
           
     //_driverControl.getRawAxis(2) - _driverControl.getRawAxis(3));
     //}
@@ -131,8 +131,8 @@ public class DriveTank extends CommandBase {
   }
 
   public static void printResults() {
-    SmartDashboard.putString("RecordX", recordX.toString());
-    SmartDashboard.putString("RecordY", recordY.toString());
+   // SmartDashboard.putString("RecordX", recordX.toString());
+   // SmartDashboard.putString("RecordY", recordY.toString());
   }
   // Called once after isFinished returns true
   @Override

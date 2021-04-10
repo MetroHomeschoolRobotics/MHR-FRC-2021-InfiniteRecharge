@@ -135,7 +135,7 @@ public class OI {
     POVButton liftControlPanelButton = new POVButton(manipulatorControl, 0, 0);
     liftControlPanelButton.whileHeld(new LiftControlPanel(_controlPanelLift));
   
-    JoystickButton moveHopperButton = new JoystickButton(driverControl, 8);
+    JoystickButton moveHopperButton = new JoystickButton(driverControl, 10);
 moveHopperButton.whenPressed(new MoveHopperDown(_magazine));
 
     _tankDrive.setDefaultCommand(_driveTank);
