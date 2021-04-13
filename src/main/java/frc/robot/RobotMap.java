@@ -26,7 +26,7 @@ public class RobotMap {
   public static int MagazineMotor = 0;//CAN TalonSRX
   public static int TransitionMotor = 2;//Spark
   public static int ClimberMotor = 1; //CAN TalonSRX
-  public static int ControlPanelLiftMotor = 3;//Spark
+  //public static int ControlPanelLiftMotor = 3;//Spark
   public static int ControlPanelLiftEncoderA = 0;
   public static int ControlPanelLiftEncoderB = 1;
   public static int hoodMotorPort = 1;

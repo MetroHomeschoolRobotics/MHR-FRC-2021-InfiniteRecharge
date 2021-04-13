@@ -32,6 +32,7 @@ public class DriveLimelight extends CommandBase {
   int yDivide = 20; //was 27; before that was 40, 37
   double speedThreshold = 0.25;
   double finishThreshold = 0.45;
+  double minMoveSpeed = .1;
   private Shooter _shooter;
   private boolean _moveHood;
   /**
@@ -40,6 +41,7 @@ public class DriveLimelight extends CommandBase {
   public DriveLimelight(DriveSystemBase tankDrive, Shooter shooter, boolean moveHood) {
     _tankDrive = tankDrive;
     _shooter = shooter;
+    SmartDashboard.putBoolean("Lined Up", false);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(tankDrive);
   }
@@ -57,7 +59,8 @@ public class DriveLimelight extends CommandBase {
     SmartDashboard.putBoolean("Beginning DriveLimelight", true);
     NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
     //activate vision processing mode on limelight
-    limelightTable.getEntry("camMode").setNumber(0);
+    //limelightTable.getEntry("camMode").setNumber(0);
+    //limelightTable.getEntry("ledMode").setNumber(3);
   }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -154,13 +157,18 @@ public class DriveLimelight extends CommandBase {
 
     SmartDashboard.putNumber("Left Drive Speed", -y+x);
     SmartDashboard.putNumber("Right Drive Speed", -(y+x));//negated because motors are mirrored
-    if(!_moveHood) {
+
+      if(x<minMoveSpeed) {
+      x=minMoveSpeed;
+      }
+      if(y<minMoveSpeed) {
+        y = minMoveSpeed;
+      }
     _tankDrive.move(x, y, 0);
-    } else {
-      _tankDrive.move(0, y, 0);
-      _shooter.setHoodMotor(x);
-    }
   }
+    
+  
+  
 
   // Called once the command ends or is interrupted.
   @Override
@@ -170,6 +178,7 @@ public class DriveLimelight extends CommandBase {
     //change limelight to driver view mode
     limelightTable.getEntry("camMode").setNumber(1);
     _tankDrive.move(0, 0, 0);
+    limelightTable.getEntry("ledMode").setNumber(1);
   }
 
   // Returns true when the command should end.

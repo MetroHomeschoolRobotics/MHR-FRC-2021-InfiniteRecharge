@@ -80,8 +80,8 @@ public class DriveTank extends CommandBase {
         y = (y*y);
       }
       if (_driverControl.getRawAxis(2) > 0.8) {
-        x = x/4;//TODO: Was 2
-        y = y/4;
+        x = x/2;//TODO: Was 2
+        y = y/2;
       }else if (_driverControl.getRawAxis(3) > 0.8) {
         x = 2*x;
         y = 2*y;

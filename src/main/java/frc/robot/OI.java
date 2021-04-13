@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -66,18 +68,18 @@ public class OI {
   SendableChooser<CommandBase> _i2cPixyChooser = new SendableChooser<>();
   SendableChooser<CommandBase> _spiPixyChooser = new SendableChooser<>();
 
-  public OI(Pixy2 i2cPixy2, Pixy2 spiPixy2, DriveSystemBase tankDrive, Intake intake, Shooter shooter, Magazine magazine, ControlPanel controlPanel, Transition transition, IntakeLifter intakeLifter, Climber climber, ControlPanelLift controlPanelLift){
+  public OI(Pixy2 i2cPixy2, Pixy2 spiPixy2, DriveSystemBase tankDrive, Intake intake, Shooter shooter, Magazine magazine,  Transition transition, IntakeLifter intakeLifter, Climber climber){
     _i2cPixy2 = i2cPixy2;
     _spiPixy2 = spiPixy2;
     _tankDrive = tankDrive;
     _intake = intake;
     _shooter = shooter;
     _magazine = magazine;
-    _controlPanel = controlPanel;
+   // _controlPanel = controlPanel;
     _transition = transition;
     _intakeLifter = intakeLifter;
     _climber = climber;
-    _controlPanelLift = controlPanelLift;
+    //_controlPanelLift = controlPanelLift;
   }
   
   public void init() {
@@ -87,6 +89,8 @@ public class OI {
     _driveTank = new DriveTank(_tankDrive, driverControl, manipulatorControl);
     _transitionTeleop = new TransitionTeleop(_transition, manipulatorControl);
     _climbWinch = new ClimbWinch(_climber, driverControl);
+    CommandScheduler.getInstance().setDefaultCommand(_transition, _transitionTeleop);
+
     //_runIntake = new RunIntake(_intake, driverControl);
    // _shooterAxis = new Joystick(driverControl, 3);
 
@@ -103,10 +107,10 @@ public class OI {
     HoodAdjustmentButton.whileHeld(new RunControlPanel(_controlPanel));
 
     JoystickButton targetButton = new JoystickButton(driverControl, 1);
-    targetButton.whileHeld(new DriveLimelight(_tankDrive, _shooter, false));
+    targetButton.whileHeld(new DriveLimelightTrench(_tankDrive));
 
-    JoystickButton targetWithHoodButton = new JoystickButton(driverControl, 2);
-    targetWithHoodButton.whileHeld(new DriveLimelight(_tankDrive, _shooter, true));
+    //JoystickButton targetWithHoodButton = new JoystickButton(driverControl, 2);
+    //targetWithHoodButton.whileHeld(new DriveLimelight(_tankDrive, _shooter, false));
 
     //JoystickButton targetTrenchButton = new JoystickButton(driverControl, 2);
     //targetTrenchButton.whileHeld(new DriveLimelightTrench(_tankDrive));
@@ -127,13 +131,18 @@ public class OI {
     activateClimbPistonsButton.whenPressed(new ClimbPistons(_climber));
 
     POVButton magazineForwardButton = new POVButton(manipulatorControl, 90, 0);
-    magazineForwardButton.toggleWhenPressed(new RunMagazine(_magazine));
+    magazineForwardButton.whileHeld(new RunMagazine(_magazine));
 
     POVButton magazineReverseButton = new POVButton(manipulatorControl, 270, 0);
-    magazineReverseButton.toggleWhenPressed(new ReverseMagazine(_magazine));
+    magazineReverseButton.whileHeld(new ReverseMagazine(_magazine));
     
-    POVButton liftControlPanelButton = new POVButton(manipulatorControl, 0, 0);
-    liftControlPanelButton.whileHeld(new LiftControlPanel(_controlPanelLift));
+    POVButton toggleCompressorOnButton = new POVButton(driverControl, 0, 0);
+    POVButton toggleCompressorOffButton = new POVButton(driverControl, 180, 0);
+    toggleCompressorOnButton.whenPressed(new ToggleCompressor(_intakeLifter, true));
+    toggleCompressorOffButton.whenPressed(new ToggleCompressor(_intakeLifter, false));
+    
+    //POVButton liftControlPanelButton = new POVButton(manipulatorControl, 0, 0);
+    //liftControlPanelButton.whileHeld(new LiftControlPanel(_controlPanelLift));
   
     JoystickButton moveHopperButton = new JoystickButton(driverControl, 10);
 moveHopperButton.whenPressed(new MoveHopperDown(_magazine));
@@ -170,41 +179,38 @@ moveHopperButton.whenPressed(new MoveHopperDown(_magazine));
 
     _autoChooser.setDefaultOption("3-ball", new SequentialCommandGroup(
       new WaitCommand(0),
-      new DriveLimelight(_tankDrive, _shooter, false),
+      new DriveLimelightTrench(_tankDrive),
       new ShootMacro(_intake, _magazine, _shooter, _transition),
       new AutoDriveTime(_tankDrive, 0, 0.25, 0, 1.5),
       new MoveIntake(_intakeLifter)));
-    _autoChooser.addOption("5-ball", new SequentialCommandGroup(
+    _autoChooser.addOption("5-ball", new ParallelRaceGroup(new SequentialCommandGroup(
         new MoveIntake(_intakeLifter),
+        new WaitCommand(1),
         new ParallelRaceGroup(
-          new WaitCommand(2.2),
-          new RunIntake(_intake, driverControl),
+          //new WaitCommand(2.2),
+          //new RunIntake(_intake, driverControl),
           new RunMagazine(_magazine),
           new AutoDriveTime(_tankDrive, 0, -0.4, 0, 2.2)),//time to be lengthened to match actual ball locations
         //new AutoDriveTime(_tankDrive, 0, 0, 0, 0),
+        new MoveIntake(_intakeLifter),
         new ParallelRaceGroup(
           new WaitCommand(1),//make wait shorter in final version
-          new RunIntake(_intake, driverControl),
+          //new RunIntake(_intake, driverControl),
+
           new RunMagazine(_magazine)),  
         new SeekTarget(_tankDrive),
         //may add AutoDriveTime to reach initiation line at full speed, decreasing time required
-        new DriveLimelight(_tankDrive, _shooter, false),
-        new ShootMacro(_intake, _magazine, _shooter, _transition)));
+        new DriveLimelightTrench(_tankDrive),
+        new ShootMacro(_intake, _magazine, _shooter, _transition)),new RunIntake(_intake, driverControl)));
     _autoChooser.addOption("No auto", new WaitCommand(15));
-    _autoChooser.addOption("Drive Array", new AutoDriveArray(_tankDrive, new ArrayList<Double>(Arrays.asList(
-      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.00733184814453125, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.09039618328682097, 0.0937751884650102, 0.0937751884650102, 0.0937751884650102, 0.10071919901600568, 0.18379937300524496, 0.18379937300524496, 0.18379937300524496, 0.18379937300524496, 0.18379937300524496, 0.18379937300524496, 0.18379937300524496, 0.18379937300524496, 0.16070433710710752, 0.033759066298621576, 0.0, 0.035836069410500215, 0.047151095094872364, 0.08707917817350408, 0.13915927138580741, 0.08707917817350408, 0.06277512904249427, 0.06277512904249427, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.00523901082031622, 0.008439766574655394, 0.007936015812903818, 0.01119102285599205, 0.010609771954484093, 0.010609771954484093, 0.010609771954484093, 0.010609771954484093, 0.010609771954484093, 0.013027775657824425, 0.014329777606803096, 0.01785603557903359, 0.018607786717606434, 0.01937503787239736, 0.02176979454337602, 0.02883780880274145, 0.029791060269481306, 0.027900057352219676, 0.033759066298621576, 0.03274381476700938, 0.011787773773718091, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.02607105109720298, 0.04243908781793637, 0.06559613340216863, 0.10974796256965691, 0.11724998813633647, 0.11724998813633647, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.07595789917189855, 0.08221990853997063, 0.08382417312505952, 0.08872993072205348, 0.09039618328682097, 0.05731911042721238, 0.05731911042721238, 0.08872993072205348, 0.012400024707662216, 0.0, -0.00733184814453125, -0.01410675048828125, -0.016143798828125, -0.025665283203125, -0.0274658203125, -0.01685333251953125, -0.0059814453125, 0.009493768146812798, 0.01119102285599205, 0.011787773773718091, 0.011787773773718091, 0.006517762774300745, 0.006517762774300745, 0.006517762774300745, 0.006517762774300745, 0.006076012106754486, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.006866455078125, -0.013458251953125, -0.01685333251953125, -0.022247314453125, -0.022247314453125, -0.0059814453125, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
-    )),
-     new ArrayList<Double>(Arrays.asList(
-      0.0, 0.0, 0.0, 0.0, 0.0, -0.006866455078125, -0.0098876953125, -0.017578125, -0.02655792236328125, -0.03632354736328125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.5, -0.5, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.461700439453125, -0.079376220703125, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.005157470703125, -0.02392578125, -0.03955078125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.125, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.12305450439453125, -0.12305450439453125, -0.12305450439453125, -0.125, -0.12305450439453125, -0.11920928955078125, -0.11542510986328125, -0.113555908203125, -0.09741973876953125, -0.08094024658203125, -0.073272705078125, -0.06598663330078125, -0.06317901611328125, -0.061798095703125, -0.06043243408203125, -0.05774688720703125, -0.05512237548828125, -0.04523468017578125, -0.04291534423828125, -0.04065704345703125, -0.037384033203125, -0.03632354736328125, -0.04065704345703125, -0.03955078125, -0.03845977783203125, -0.03845977783203125, -0.03845977783203125, -0.03845977783203125, -0.03632354736328125, -0.03632354736328125, -0.03632354736328125, -0.03632354736328125, -0.033233642578125, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01785603557903359, 0.09207793586780655, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.1116002294088787, 0.10428420438881192, 0.10428420438881192, 0.10428420438881192, 0.10071919901600568, 0.09895994635392968, 0.0, 0.0, 0.03689782099076666, 0.054684106496818874, 0.06417788121422241, 0.061387876886984216, 0.053389854555949245, 0.03797507258725119, 0.03689782099076666, 0.027900057352219676, 0.02176979454337602, 0.007936015812903818, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
-     ))));//TODO: Fix these arrays to be an actual drive routine
-    
+   
 
   SmartDashboard.putData("AutoMode", _autoChooser);
 
 
-  SmartDashboard.putNumber("Hood Angle", 20);
-  SmartDashboard.putNumber("shooter speed (0-1)", .62);
-  SmartDashboard.putData("Move Hood", new MoveShooterHoodToPreset(SmartDashboard.getNumber("Hood Angle", 20), _shooter));
+//  SmartDashboard.putNumber("Hood Angle", 20);
+  //SmartDashboard.putNumber("shooter speed (0-1)", .62);
+ // SmartDashboard.putData("Move Hood", new MoveShooterHoodToPreset(SmartDashboard.getNumber("Hood Angle", 20), _shooter));
 }
   
   public CommandBase getAutonomousCommand(){

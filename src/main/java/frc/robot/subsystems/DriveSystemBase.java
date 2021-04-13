@@ -19,5 +19,6 @@ public abstract class DriveSystemBase extends SubsystemBase {
   public abstract void move(double x, double y, double z);
   public abstract double getLeftEncoder();
   public abstract double getRightEncoder();
+  public abstract void moveTank(double left, double right);
 
 }

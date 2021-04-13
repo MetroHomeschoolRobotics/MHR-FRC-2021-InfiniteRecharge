@@ -33,7 +33,7 @@ public class RunIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _intake.setIntake(0.8);
+    _intake.setIntake(1);
   }
 
   // Called once the command ends or is interrupted.

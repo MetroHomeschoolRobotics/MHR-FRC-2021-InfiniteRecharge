@@ -53,4 +53,11 @@ public class TankDrive extends DriveSystemBase {
     SmartDashboard.putNumber("TankDrive Y", y);
     SmartDashboard.putNumber("TankDrive Z", z);
   }
+@Override
+  public void moveTank(double left, double right) {
+_frontLeft.set(left);
+_frontRight.set(right);
+_rearLeft.set(left);
+_rearRight.set(right);
+  }
 }

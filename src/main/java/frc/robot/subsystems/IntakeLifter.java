@@ -10,21 +10,26 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Compressor;
 
 public class IntakeLifter extends SubsystemBase {
   private DoubleSolenoid _intakeSolenoid1;
   private DoubleSolenoid _intakeSolenoid2;
+  private Compressor  _compressor;
   /**
    * Creates a new IntakeLifter.
    */
-  public IntakeLifter(DoubleSolenoid intakeSolenoid1, DoubleSolenoid intakeSolenoid2) {
+  public IntakeLifter(DoubleSolenoid intakeSolenoid1, DoubleSolenoid intakeSolenoid2, Compressor compressor) {
     _intakeSolenoid1 = intakeSolenoid1;
     _intakeSolenoid2 = intakeSolenoid2;
+    _compressor = compressor;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("Compressor", _compressor.enabled());
   }
 
   public void setIntakeLifterDown() {
@@ -52,5 +57,12 @@ public class IntakeLifter extends SubsystemBase {
       state = 0;
     }
     return state;
+  }
+  public boolean getCompressorState() {
+    return _compressor.enabled();
+  }
+  public void setCompressor(boolean state) {
+_compressor.setClosedLoopControl(state);
+
   }
 }

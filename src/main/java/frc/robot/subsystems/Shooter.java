@@ -30,12 +30,14 @@ public class Shooter extends SubsystemBase {
     _shooterMotor2 = shooterMotor2;
     _hoodMotor = hoodMotor;
     _hoodPot = hoodPot;
+    SmartDashboard.putBoolean("Shooter running", false);
   }
 
   @Override
   public void periodic() {
     // This method will be called oncex per scheduler run
-SmartDashboard.putNumber("Current Potentiometer Value", _hoodPot.get());
+//SmartDashboard.putNumber("Current Potentiometer Value", _hoodPot.get());
+
   }
 
 public void setHoodMotor(double speed) {
@@ -50,6 +52,12 @@ public void setHoodMotor(double speed) {
     //_shooterMotor1.set(-speed);
     //_shooterMotor2.set(speed);
     SmartDashboard.putNumber("Shooter Speed", speed);
+    if(speed == 0) {
+    SmartDashboard.putBoolean("Shooter Running", false);
+    } else {
+      SmartDashboard.putBoolean("Shooter Running", true);
+    }
+
   }
   public double getPotentiometer() {
 return _hoodPot.get();

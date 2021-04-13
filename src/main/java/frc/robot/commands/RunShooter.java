@@ -32,7 +32,7 @@ public class RunShooter extends CommandBase {
   @Override
   public void initialize() {
     
-    _shooterSpeed = SmartDashboard.getNumber("shooter speed (0-1)", .62);
+    //_shooterSpeed = SmartDashboard.getNumber("shooter speed (0-1)", .62);
     SmartDashboard.putBoolean("Shooting", true);
     _manipulatorControl.setRumble(RumbleType.kLeftRumble, 0); //TODO turn on for compeition. 
   }
