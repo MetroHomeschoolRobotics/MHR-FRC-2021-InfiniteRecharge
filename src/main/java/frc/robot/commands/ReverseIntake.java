@@ -39,7 +39,7 @@ public class ReverseIntake extends CommandBase {
       rate = 0;
     }
     _intake.setIntake(rate);*/
-    _intake.setIntake(-0.8);
+    _intake.setIntake(0.8);
   }
 
   // Called once the command ends or is interrupted.

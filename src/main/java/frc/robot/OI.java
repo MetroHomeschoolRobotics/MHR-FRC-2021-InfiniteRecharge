@@ -109,6 +109,9 @@ public class OI {
     JoystickButton targetButton = new JoystickButton(driverControl, 1);
     targetButton.whileHeld(new DriveLimelightTrench(_tankDrive));
 
+    JoystickButton removePinButton = new JoystickButton(driverControl, 8);
+    removePinButton.whileHeld(new RemoveClimberPin(_climber));
+
     //JoystickButton targetWithHoodButton = new JoystickButton(driverControl, 2);
     //targetWithHoodButton.whileHeld(new DriveLimelight(_tankDrive, _shooter, false));
 
@@ -116,7 +119,7 @@ public class OI {
     //targetTrenchButton.whileHeld(new DriveLimelightTrench(_tankDrive));
 
     JoystickButton shootMacroButton = new JoystickButton(manipulatorControl, 1);
-    shootMacroButton.whenPressed(new ShootMacro(_intake, _magazine, _shooter, _transition));
+    shootMacroButton.whenPressed(new ShootMacro(_intake, _magazine, _shooter, _transition, _driveLimelightTrench));
 
     JoystickButton cancelAllButton = new JoystickButton(manipulatorControl, 7);
     cancelAllButton.whileHeld(new CancelAll(_controlPanel, _intake, _magazine, _shooter, _tankDrive));
@@ -127,8 +130,8 @@ public class OI {
     JoystickButton moveIntakeButton = new JoystickButton(driverControl, 4);
     moveIntakeButton.whenPressed(new MoveIntake(_intakeLifter));
 
-    JoystickButton activateClimbPistonsButton = new JoystickButton(driverControl, 10);
-    activateClimbPistonsButton.whenPressed(new ClimbPistons(_climber));
+    //JoystickButton activateClimbPistonsButton = new JoystickButton(driverControl, 10);
+    //activateClimbPistonsButton.whenPressed(new ClimbPistons(_climber));
 
     POVButton magazineForwardButton = new POVButton(manipulatorControl, 90, 0);
     magazineForwardButton.whileHeld(new RunMagazine(_magazine));
@@ -180,28 +183,40 @@ moveHopperButton.whenPressed(new MoveHopperDown(_magazine));
     _autoChooser.setDefaultOption("3-ball", new SequentialCommandGroup(
       new WaitCommand(0),
       new DriveLimelightTrench(_tankDrive),
-      new ShootMacro(_intake, _magazine, _shooter, _transition),
-      new AutoDriveTime(_tankDrive, 0, 0.25, 0, 1.5),
-      new MoveIntake(_intakeLifter)));
-    _autoChooser.addOption("5-ball", new ParallelRaceGroup(new SequentialCommandGroup(
+      new ShootMacro(_intake, _magazine, _shooter, _transition, _driveLimelightTrench),
+      new AutoDriveTime(_tankDrive, 0, 0.25, 0, .5)));
+      //new MoveIntake(_intakeLifter)));
+    _autoChooser.addOption("5-ball", new SequentialCommandGroup(new ParallelRaceGroup(new SequentialCommandGroup(
         new MoveIntake(_intakeLifter),
-        new WaitCommand(1),
+        
+        new WaitCommand(.5),
+        
         new ParallelRaceGroup(
           //new WaitCommand(2.2),
           //new RunIntake(_intake, driverControl),
           new RunMagazine(_magazine),
-          new AutoDriveTime(_tankDrive, 0, -0.4, 0, 2.2)),//time to be lengthened to match actual ball locations
+          new AutoDriveTime(_tankDrive, 0, -0.5, 0, 1)),//time to be lengthened to match actual ball locations
         //new AutoDriveTime(_tankDrive, 0, 0, 0, 0),
-        new MoveIntake(_intakeLifter),
         new ParallelRaceGroup(
-          new WaitCommand(1),//make wait shorter in final version
+          //new WaitCommand(2.2),
+          //new RunIntake(_intake, driverControl),
+          new RunMagazine(_magazine),
+          new AutoDriveTime(_tankDrive, 0, -0.25, 0, 2)),
+
+        new ParallelRaceGroup(
+          new WaitCommand(1.25),//make wait shorter in final version
           //new RunIntake(_intake, driverControl),
 
-          new RunMagazine(_magazine)),  
-        new SeekTarget(_tankDrive),
+          new RunMagazine(_magazine)),
+          new intakeUp(_intakeLifter),
+          //_intakeLifter.setIntakeLifterUp(),  
+          //add back and to the left motion here
+          new AutoDriveTime(_tankDrive, -.25, .25, 0, 1),
+          //new AutoDriveTime(_tankDrive, -.25, 0,0, .25),
+          //change seek target to a left turn
+        //new SeekTarget(_tankDrive),
         //may add AutoDriveTime to reach initiation line at full speed, decreasing time required
-        new DriveLimelightTrench(_tankDrive),
-        new ShootMacro(_intake, _magazine, _shooter, _transition)),new RunIntake(_intake, driverControl)));
+        new DriveLimelightTrench(_tankDrive)), new RunIntake(_intake, driverControl)), new ShootMacro(_intake, _magazine, _shooter, _transition, _driveLimelightTrench)));
     _autoChooser.addOption("No auto", new WaitCommand(15));
    
 

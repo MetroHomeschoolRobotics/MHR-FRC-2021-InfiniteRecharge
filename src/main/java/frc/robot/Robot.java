@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
     //ControlPanel controlPanel = new ControlPanel(new Spark(RobotMap.ControlPanelSpinMotor));
     Transition transition = new Transition(new Spark(RobotMap.TransitionMotor));
     IntakeLifter intakeLifter = new IntakeLifter(new DoubleSolenoid(0, 1), new DoubleSolenoid(2, 3), new Compressor(0));
-    Climber climber = new Climber(new DoubleSolenoid(4, 5), new DoubleSolenoid(6, 7), new TalonSRX(RobotMap.ClimberMotor));
+    Climber climber = new Climber(new TalonSRX(RobotMap.ClimberMotor), new Spark(RobotMap.PinMotor));
     //ControlPanelLift controlPanelLift = new ControlPanelLift(new Spark(RobotMap.ControlPanelLiftMotor), new Encoder(RobotMap.ControlPanelLiftEncoderA, RobotMap.ControlPanelLiftEncoderB));
     CameraServer.getInstance().startAutomaticCapture();
 
@@ -147,8 +147,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    //NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
-    
+    NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+    limelightTable.getEntry("ledMode").setNumber(3);
     //m_autonomousCommand = m_chooser.getSelected();
     CommandScheduler.getInstance().run(); 
     m_autonomousCommand = m_oi.getAutonomousCommand();
@@ -196,7 +196,7 @@ public class Robot extends TimedRobot {
     
    // limelightTable.getEntry("ledMode").setNumber(3);
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+      //m_autonomousCommand.cancel();
     }
     //instantiate drive command
     m_oi._driveTank.schedule();
