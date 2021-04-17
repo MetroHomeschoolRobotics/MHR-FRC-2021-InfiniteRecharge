@@ -19,7 +19,7 @@ public class ClimbWinch extends CommandBase {
   private Climber _climber;
   private double speed;
   private final Joystick _driverControl;
-  private double threshold = 0.2;
+  private double threshold = 0.1;
 
   public ClimbWinch(Climber climber, Joystick driverControl) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -42,7 +42,7 @@ public class ClimbWinch extends CommandBase {
       speed = 0;
     }
     _climber.runWinch(speed);
-  //}
+
 }
 
   // Called once the command ends or is interrupted.
