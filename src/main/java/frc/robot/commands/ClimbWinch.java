@@ -36,7 +36,7 @@ public class ClimbWinch extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //if(Timer.getMatchTime()<30) {
+   
     speed = _driverControl.getRawAxis(5);
     if(Math.abs(speed) < threshold) {
       speed = 0;

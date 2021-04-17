@@ -41,10 +41,10 @@ public class TransitionTeleop extends CommandBase {
             _transition.setTransitionMotor(0);
     //if right trigger is pressed beyond threshold transition spins forward
     } else if (_manipulatorControl.getRawAxis(3) >= threshold) { 
-      _transition.setTransitionMotor(speed);
+      _transition.setTransitionMotor(-speed);
     //if left trigger is pressed beyond threshold transition spins in reverse
     } else if (_manipulatorControl.getRawAxis(2) >= threshold) {
-      _transition.setTransitionMotor(-speed);
+      _transition.setTransitionMotor(speed);
     }
   }
 

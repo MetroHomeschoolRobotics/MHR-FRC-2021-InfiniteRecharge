@@ -94,13 +94,13 @@ public class OI {
     //_runIntake = new RunIntake(_intake, driverControl);
    // _shooterAxis = new Joystick(driverControl, 3);
 
-    JoystickButton intakeButton = new JoystickButton(driverControl, 5);
+    JoystickButton intakeButton = new JoystickButton(driverControl, 6);
     intakeButton.whileHeld(new RunIntake(_intake, driverControl));
 
     JoystickButton shootOnButton = new JoystickButton(manipulatorControl, 6);
-    shootOnButton.whenPressed(new RunShooter(_shooter, manipulatorControl));
+    shootOnButton.whileHeld(new RunShooter(_shooter, manipulatorControl));
 
-    JoystickButton reverseIntakeButton = new JoystickButton(driverControl, 6);
+    JoystickButton reverseIntakeButton = new JoystickButton(driverControl, 5);
     reverseIntakeButton.whileHeld(new ReverseIntake(_intake, driverControl));
 
     JoystickButton HoodAdjustmentButton = new JoystickButton(driverControl, 8); // Button 8 = Start Button
@@ -115,11 +115,11 @@ public class OI {
     //JoystickButton targetWithHoodButton = new JoystickButton(driverControl, 2);
     //targetWithHoodButton.whileHeld(new DriveLimelight(_tankDrive, _shooter, false));
 
-    //JoystickButton targetTrenchButton = new JoystickButton(driverControl, 2);
-    //targetTrenchButton.whileHeld(new DriveLimelightTrench(_tankDrive));
+    JoystickButton targetTrenchButton = new JoystickButton(driverControl, 2);
+    targetTrenchButton.whileHeld(new DriveLimelight(_tankDrive));
 
     JoystickButton shootMacroButton = new JoystickButton(manipulatorControl, 1);
-    shootMacroButton.whenPressed(new ShootMacro(_intake, _magazine, _shooter, _transition, _driveLimelightTrench));
+    shootMacroButton.whileHeld(new ShootMacro(_intake, _magazine, _shooter, _transition, _driveLimelightTrench));
 
     JoystickButton cancelAllButton = new JoystickButton(manipulatorControl, 7);
     cancelAllButton.whileHeld(new CancelAll(_controlPanel, _intake, _magazine, _shooter, _tankDrive));
@@ -136,8 +136,20 @@ public class OI {
     POVButton magazineForwardButton = new POVButton(manipulatorControl, 90, 0);
     magazineForwardButton.whileHeld(new RunMagazine(_magazine));
 
+    POVButton magazineForwardButton1 = new POVButton(manipulatorControl, 135, 0);
+    magazineForwardButton1.whileHeld(new RunMagazine(_magazine));
+
+    POVButton magazineForwardButton2 = new POVButton(manipulatorControl, 45, 0);
+    magazineForwardButton2.whileHeld(new RunMagazine(_magazine));
+
     POVButton magazineReverseButton = new POVButton(manipulatorControl, 270, 0);
     magazineReverseButton.whileHeld(new ReverseMagazine(_magazine));
+
+    POVButton magazineReverseButton1 = new POVButton(manipulatorControl, 225, 0);
+    magazineReverseButton1.whileHeld(new ReverseMagazine(_magazine));
+
+    POVButton magazineReverseButton2 = new POVButton(manipulatorControl, 315, 0);
+    magazineReverseButton2.whileHeld(new ReverseMagazine(_magazine));
     
     POVButton toggleCompressorOnButton = new POVButton(driverControl, 0, 0);
     POVButton toggleCompressorOffButton = new POVButton(driverControl, 180, 0);
@@ -184,7 +196,7 @@ moveHopperButton.whenPressed(new MoveHopperDown(_magazine));
       new WaitCommand(0),
       new DriveLimelightTrench(_tankDrive),
       new ShootMacro(_intake, _magazine, _shooter, _transition, _driveLimelightTrench),
-      new AutoDriveTime(_tankDrive, 0, 0.25, 0, .5)));
+      new AutoDriveTime(_tankDrive, 0, -0.25, 0, .5)));
       //new MoveIntake(_intakeLifter)));
     _autoChooser.addOption("5-ball", new SequentialCommandGroup(new ParallelRaceGroup(new SequentialCommandGroup(
         new MoveIntake(_intakeLifter),

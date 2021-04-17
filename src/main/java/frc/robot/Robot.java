@@ -189,6 +189,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+    limelightTable.getEntry("ledMode").setNumber(3);
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -196,7 +198,7 @@ public class Robot extends TimedRobot {
     
    // limelightTable.getEntry("ledMode").setNumber(3);
     if (m_autonomousCommand != null) {
-      //m_autonomousCommand.cancel();
+      m_autonomousCommand.cancel();
     }
     //instantiate drive command
     m_oi._driveTank.schedule();

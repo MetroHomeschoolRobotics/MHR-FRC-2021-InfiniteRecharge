@@ -9,195 +9,134 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSystemBase;
-import frc.robot.subsystems.Shooter;
 // import frc.robot.subsystems.DriveSystemBase;
 // import frc.robot.subsystems.TankDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.subsystems.Shooter;
+
 
 public class DriveLimelight extends CommandBase {
   //pull data from network tables (communication protocol)
 
-  double minDriveSpeed = 0.2;//was 0.001; usually 0.1, minimum speed that makes robot move; adjustments smaller than this are ignored
-  double KpAim = -0.1;//proportional control constant for aim
-  double KpDistance = -0.1;//proportional control constant for distance
-  double leftSpeed;//speed of left side of drive train
-  double rightSpeed;//speed of right side of drive train
   DriveSystemBase _tankDrive;
-  double threshold = 0.25;
-  int xDivide = 27; //was 40, before that was 47, but could be slower to drop speed
-  int yDivide = 20; //was 27; before that was 40, 37
-  double speedThreshold = 0.25;
-  double finishThreshold = 0.45;
-  double minMoveSpeed = .1;
-  private Shooter _shooter;
-  private boolean _moveHood;
+  NetworkTable _limelightTable;
+  double KpAim = -.04;//was .01
+  double KpDistance = -.1;
+  double min_aim_command = .055;
+  double min_drive_command = .05;
+  double aim_threshold = 1.5;
+  double max_aim_threshold = .09;
+  boolean done = false;
+  double distance_threshold = 1.5;
+  double tx_finishThreshold = 1.35;
+  double ty_finishThreshold = 1;
+  int finished_times = 0;
   /**
    * Creates a new DriveLimelight.
    */
-  public DriveLimelight(DriveSystemBase tankDrive, Shooter shooter, boolean moveHood) {
+  public DriveLimelight(DriveSystemBase tankDrive) {
     _tankDrive = tankDrive;
-    _shooter = shooter;
-    SmartDashboard.putBoolean("Lined Up", false);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(tankDrive);
+    _limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
   }
-
- /* @Override
-  public void initDefaultCommand() {
-    //Set the default command for a subsystem here.
-    //setDefaultCommand(new MySpecialCommand());
-    //setDefaultCommand();
-  }*/
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    finished_times = 0;
     SmartDashboard.putBoolean("Beginning DriveLimelight", true);
-    NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
-    //activate vision processing mode on limelight
-    //limelightTable.getEntry("camMode").setNumber(0);
-    //limelightTable.getEntry("ledMode").setNumber(3);
+        //change limelight to vision processing mode
+        _limelightTable.getEntry("camMode").setNumber(0);
+        _limelightTable.getEntry("ledMode").setNumber(3);
+        _limelightTable.getEntry("pipeline").setNumber(1);
+        SmartDashboard.putBoolean("Lined Up", false);
   }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
-    limelightTable.getEntry("pipeline").setNumber(0);
-    NetworkTableEntry tx = limelightTable.getEntry("tx");
-    NetworkTableEntry ty = limelightTable.getEntry("ty");
-    NetworkTableEntry ta = limelightTable.getEntry("ta");
-      
-    //update network tables data periodically
-    //currently returns default values
-    double tX = tx.getDouble(0.0); //x was a double
-    double tY = ty.getDouble(0.0); //y was a double
-    double area = ta.getDouble(0.0);
-
-    /*double x = tX/27;
-    double y = tY/27;*/
-    double x = 0;
-    double y = 0;
-
-    if (tX < -threshold){
-      //turn left
-      x = -Math.abs(tX/xDivide);
-    } else if (tX > threshold){
-      //turn Right
-      x = Math.abs(tX/xDivide);
-    }
-    /*if (tY < -threshold){
-      //drive forward
-      y = -Math.abs(tY/yDivide);//was positive
-    } else if (tY > threshold){
-      //drive backward
-      y = Math.abs(tY/yDivide);//was negative
-    }
-    if (x > speedThreshold){
-      x = speedThreshold;
-    }
-    if (y > speedThreshold){
-      y = speedThreshold;
-    }
-    if (x < -speedThreshold){
-      x = -speedThreshold;
-    }
-    if (y < -speedThreshold){
-      y = -speedThreshold;
+    double tx = _limelightTable.getEntry("tx").getDouble(0.0);
+    double ty = _limelightTable.getEntry("ty").getDouble(0.0);
+    double tv = _limelightTable.getEntry("tv").getDouble(0.0);
+    double heading_error = -tx;
+    double distance_error = -ty;
+    double steering_adjust = 0.0;
+    /*if(tx>aim_threshold) {
+      steering_adjust = KpDistance*heading_error - min_aim_command;
+    } else if( tx<-aim_threshold) {
+      steering_adjust = KpDistance*heading_error + min_aim_command;
     }*/
-
-
-    //y = Math.abs(tX/27);
-
-    if (Math.abs(x) < minDriveSpeed){
-      x = 0;
-      minDriveSpeed -= 0.025;
-      xDivide += 5;
+    //double distance_adjust = 0.0;
+    /*if(ty>1) {
+      distance_adjust = KpAim*distance_error - min_drive_command;
+    } else if( ty<-1) {
+      distance_adjust = KpAim*distance_error + min_drive_command;
+    }*/
+    double distance_adjust = 0;
+    if(tv == 0) {
+      steering_adjust = -.25;
+       distance_adjust = 0;
+    } else {
+    steering_adjust = KpAim*heading_error + min_drive_command;
+     distance_adjust = KpDistance*distance_error + min_drive_command;  
+     if(steering_adjust>max_aim_threshold) {
+      steering_adjust = max_aim_threshold;
+    } else if(steering_adjust<-max_aim_threshold) {
+      steering_adjust = -max_aim_threshold;
     }
-    if (Math.abs(y) < minDriveSpeed){
-      y = 0;
-      minDriveSpeed -= 0.025;
-      xDivide += 5;
-    }
-
-  
-    //post data to smart dashboard periodically
-    SmartDashboard.putNumber("Limelight X error", tX);
-    SmartDashboard.putNumber("Limelight Y error", tY);
-    SmartDashboard.putNumber("Limelight Target Area", area);
-
-    //find how to drive "How far off are we? How much should we adjust?"
-    /*double headingError = -x;
-    double distanceError = -y;
-    double steeringAdjust = 0.0;*/
-
-    //adjustments based on how far off we are
-    /*if (x > 1) {
-      steeringAdjust = -(KpAim*headingError - minDriveSpeed);
-    } else if (x < 1) {
-      steeringAdjust = -(KpAim*headingError + minDriveSpeed);
-    }
-    SmartDashboard.putNumber("Steering Adjust", steeringAdjust);
-
-    double distanceAdjust = KpDistance*distanceError;
-    SmartDashboard.putNumber("Distance Adjust", distanceAdjust);
-*/
-    //adjustments to left or right side of driveTrain
-    //leftSpeed += steeringAdjust + distanceAdjust;
-    //rightSpeed -= steeringAdjust + distanceAdjust;
-    //_tankDrive.move(steeringAdjust, distanceAdjust, 0);
-    /*x = steeringAdjust;
-    y = distanceAdjust;*/
-
-    SmartDashboard.putNumber("X Speed", x);
-    SmartDashboard.putNumber("Y Speed", y);
-
-    SmartDashboard.putNumber("Left Drive Speed", -y+x);
-    SmartDashboard.putNumber("Right Drive Speed", -(y+x));//negated because motors are mirrored
-
-      if(x<minMoveSpeed) {
-      x=minMoveSpeed;
-      }
-      if(y<minMoveSpeed) {
-        y = minMoveSpeed;
-      }
-    _tankDrive.move(x, y, 0);
   }
     
-  
-  
+SmartDashboard.putNumber("Steering Adjust", steering_adjust);
+
+    double left_command = -steering_adjust;
+    double right_command =steering_adjust;
+    
+    /*double distance_adjust = 0.0;
+
+    if(distance_error < -distance_threshold) {
+
+    } else if(distance_error>distance_threshold) {
+       distance_adjust = -.15;
+    }*/
+    SmartDashboard.putNumber("Distance adjust", distance_adjust);
+    //_tankDrive.moveTank(-left_command, right_command);
+_tankDrive.move(steering_adjust,distance_adjust,0);
+//distance_adjust
+  }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
-    SmartDashboard.putBoolean("Beginning DriveLimelight", false);
-    //change limelight to driver view mode
-    limelightTable.getEntry("camMode").setNumber(1);
-    _tankDrive.move(0, 0, 0);
-    limelightTable.getEntry("ledMode").setNumber(1);
+    //_limelightTable.getEntry("camMode").setNumber(1);
+    //_limelightTable.getEntry("ledMode").setNumber(1);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
-    NetworkTableEntry tv = limelightTable.getEntry("tv");
-
-    NetworkTableEntry tx = limelightTable.getEntry("tx");
-    NetworkTableEntry ty = limelightTable.getEntry("ty");
-    double tX = tx.getDouble(0.0); //x was a double
-    double tY = ty.getDouble(0.0); //y was a double
-    double tV = tv.getDouble(0.0);
-    if (Math.abs(tY) < finishThreshold && Math.abs(tX) < finishThreshold && tV == 1) {
-      SmartDashboard.putBoolean("Lined Up", true);
+    
+    double tx = _limelightTable.getEntry("tx").getDouble(0.0);
+    double ty = _limelightTable.getEntry("ty").getDouble(0.0);
+    if(finished_times> 25) {
+      _tankDrive.move(0,0,0);
       return true;
-    } else {
-      SmartDashboard.putBoolean("Lined Up", false);
-      return false;
+      
+    } else{
+    if(ty!= 0 && tx!=0) {
+      
+  if(Math.abs(ty)<ty_finishThreshold && Math.abs(tx)<tx_finishThreshold){
+    SmartDashboard.putBoolean("Lined Up", true);
+    finished_times+=1;
+return false;
+  } else {
+    SmartDashboard.putBoolean("Lined Up", false);
+    return false;
   }
+} else {
+  return false;
 }
+  }
+} 
 }
