@@ -41,8 +41,8 @@ public class ClimbWinch extends CommandBase {
     if(Math.abs(speed) < threshold) {
       speed = 0;
     }
-    _climber.runWinch(speed);
-
+    _climber.runWinch(-speed); // made neg to flip direction 
+  //}
 }
 
   // Called once the command ends or is interrupted.

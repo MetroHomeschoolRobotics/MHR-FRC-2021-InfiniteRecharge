@@ -103,8 +103,8 @@ public class OI {
     JoystickButton reverseIntakeButton = new JoystickButton(driverControl, 5);
     reverseIntakeButton.whileHeld(new ReverseIntake(_intake, driverControl));
 
-    JoystickButton HoodAdjustmentButton = new JoystickButton(driverControl, 8); // Button 8 = Start Button
-    HoodAdjustmentButton.whileHeld(new RunControlPanel(_controlPanel));
+    /*JoystickButton HoodAdjustmentButton = new JoystickButton(driverControl, 8); // Button 8 = Start Button
+    HoodAdjustmentButton.whileHeld(new RunControlPanel(_controlPanel));*/
 
     JoystickButton targetButton = new JoystickButton(driverControl, 1);
     targetButton.whileHeld(new DriveLimelightTrench(_tankDrive));
@@ -121,8 +121,9 @@ public class OI {
     JoystickButton shootMacroButton = new JoystickButton(manipulatorControl, 1);
     shootMacroButton.whileHeld(new ShootMacro(_intake, _magazine, _shooter, _transition, _driveLimelightTrench));
 
-    JoystickButton cancelAllButton = new JoystickButton(manipulatorControl, 7);
-    cancelAllButton.whileHeld(new CancelAll(_controlPanel, _intake, _magazine, _shooter, _tankDrive));
+    /*JoystickButton cancelAllButton = new JoystickButton(manipulatorControl, 7);
+    cancelAllButton.whileHeld(new CancelAll(_controlPanel, _intake, _magazine, _shooter, _tankDrive));*/
+    
     //syntax from wpilib to make one command run at the end of another: 
     //JoystickButton targetShootButton = new JoystickButton(driverControl, 2);
     //targetShootButton.whenPressed(new DriveLimelight(_tankDrive).whenFinished(() -> new ShootMacro(_intake, _magazine, _shooter, _transition)));

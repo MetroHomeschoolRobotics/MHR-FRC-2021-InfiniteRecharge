@@ -30,7 +30,7 @@ public class DriveLimelightTrench extends CommandBase {
   double max_aim_threshold = .09;
   boolean done = false;
   double distance_threshold = 1.5;
-  double tx_finishThreshold = 1.5;
+  double tx_finishThreshold = 1.35;
   double ty_finishThreshold = 1;
   int finished_times = 0;
   /**
