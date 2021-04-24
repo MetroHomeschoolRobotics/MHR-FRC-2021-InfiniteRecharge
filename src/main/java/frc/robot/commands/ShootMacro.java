@@ -19,7 +19,7 @@ public class ShootMacro extends CommandBase {
   private final Magazine _magazine;
   private final Shooter _shooter;
   private final Transition _transition;
-  private double _shooterSpeed = .62;
+  private double _shooterSpeed = .6;
   private CommandBase _driveLimelightTrench;
   /**
    * Creates a new ShootMacro.
@@ -49,8 +49,8 @@ public class ShootMacro extends CommandBase {
   public void execute() {
     _shooter.setShooter(_shooterSpeed);// was 0.75; this is the speed the shooter shoots
     Timer.delay(1.25);// time to spin shooter up; TODO: attempt to minimize time taken by this command
-    _transition.setTransitionMotor(-1);
-    _magazine.setMagazine(1);
+    _transition.setTransitionMotor(-.75);
+    _magazine.setMagazine(.75);
     _intake.setIntake(-0.8);
     Timer.delay(5);//was 3.5; this is the time to empty the magazine
   }

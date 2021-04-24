@@ -23,11 +23,12 @@ public class DriveLimelight extends CommandBase {
   DriveSystemBase _tankDrive;
   NetworkTable _limelightTable;
   double KpAim = -.04;//was .01
-  double KpDistance = -.1;
-  double min_aim_command = .055;
-  double min_drive_command = .05;
+  double KpDistance = -.05;
+  double min_aim_command = .01;
+  double min_drive_command = .01;
   double aim_threshold = 1.5;
-  double max_aim_threshold = .09;
+  double max_aim_threshold = .04;
+  double max_drive_threshold= .05;
   boolean done = false;
   double distance_threshold = 1.5;
   double tx_finishThreshold = 1.35;
@@ -79,12 +80,17 @@ public class DriveLimelight extends CommandBase {
       steering_adjust = -.25;
        distance_adjust = 0;
     } else {
-    steering_adjust = KpAim*heading_error + min_drive_command;
+    steering_adjust = KpAim*heading_error + min_aim_command;
      distance_adjust = KpDistance*distance_error + min_drive_command;  
      if(steering_adjust>max_aim_threshold) {
       steering_adjust = max_aim_threshold;
     } else if(steering_adjust<-max_aim_threshold) {
       steering_adjust = -max_aim_threshold;
+    }
+    if(distance_adjust>max_drive_threshold) {
+      distance_adjust = max_drive_threshold;
+    } else if(distance_adjust <-max_drive_threshold) {
+      distance_adjust = -max_drive_threshold;
     }
   }
     
@@ -119,7 +125,7 @@ _tankDrive.move(steering_adjust,distance_adjust,0);
     
     double tx = _limelightTable.getEntry("tx").getDouble(0.0);
     double ty = _limelightTable.getEntry("ty").getDouble(0.0);
-    if(finished_times> 25) {
+    if(finished_times> 5) {
       _tankDrive.move(0,0,0);
       return true;
       

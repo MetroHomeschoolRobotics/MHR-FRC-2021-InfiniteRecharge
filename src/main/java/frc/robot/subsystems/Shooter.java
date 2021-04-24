@@ -44,6 +44,7 @@ public void setHoodMotor(double speed) {
   _hoodMotor.set(speed);
 }
 
+
   public void setShooter(double speed){
     //Shooter motors are both negated on Version 3
     //Shooter motors are mirrored on Version 2 and up, motor 1 is negative, motor 2 is positive

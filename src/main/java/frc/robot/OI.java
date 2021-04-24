@@ -119,7 +119,13 @@ public class OI {
     targetTrenchButton.whileHeld(new DriveLimelight(_tankDrive));
 
     JoystickButton shootMacroButton = new JoystickButton(manipulatorControl, 1);
-    shootMacroButton.whileHeld(new ShootMacro(_intake, _magazine, _shooter, _transition, _driveLimelightTrench));
+    //shootMacroButton.whileHeld(new ShootMacro(_intake, _magazine, _shooter, _transition, _driveLimelightTrench));
+
+//shootMacroButton.whileHeld(new SequentialCommandGroup(new RunShooterAtRPM(_shooter, 1000), new ParallelCommandGroup(new RunShooterAtRPM(_shooter, 1000), new RunIntake(_intake, driverControl), new RunMagazine(_magazine), new RunTransition(_transition))));
+
+    JoystickButton shootMacroTrenchButton = new JoystickButton(manipulatorControl, 1);
+    shootMacroTrenchButton.whileHeld(new ShootMacroTrench(_intake, _magazine, _shooter, _transition, _driveLimelightTrench));
+
 
     /*JoystickButton cancelAllButton = new JoystickButton(manipulatorControl, 7);
     cancelAllButton.whileHeld(new CancelAll(_controlPanel, _intake, _magazine, _shooter, _tankDrive));*/
@@ -197,7 +203,7 @@ moveHopperButton.whenPressed(new MoveHopperDown(_magazine));
       new WaitCommand(0),
       new DriveLimelightTrench(_tankDrive),
       new ShootMacro(_intake, _magazine, _shooter, _transition, _driveLimelightTrench),
-      new AutoDriveTime(_tankDrive, 0, -0.25, 0, .5)));
+      new AutoDriveTime(_tankDrive, 0, -0.25, 0, .75)));
       //new MoveIntake(_intakeLifter)));
     _autoChooser.addOption("5-ball", new SequentialCommandGroup(new ParallelRaceGroup(new SequentialCommandGroup(
         new MoveIntake(_intakeLifter),
