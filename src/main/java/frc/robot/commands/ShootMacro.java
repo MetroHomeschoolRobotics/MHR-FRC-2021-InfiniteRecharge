@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.DriveLimelightTrench;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class ShootMacro extends CommandBase {
   private final Intake _intake;
@@ -18,15 +20,17 @@ public class ShootMacro extends CommandBase {
   private final Shooter _shooter;
   private final Transition _transition;
   private double _shooterSpeed = .62;
+  private CommandBase _driveLimelightTrench;
   /**
    * Creates a new ShootMacro.
    */
-  public ShootMacro(Intake intake, Magazine magazine, Shooter shooter, Transition transition) {
+  public ShootMacro(Intake intake, Magazine magazine, Shooter shooter, Transition transition, CommandBase driveLimelightTrench) {
     // Use addRequirements() here to declare subsystem dependencies.
     _intake = intake;
     _magazine = magazine;
     _shooter = shooter;
     _transition = transition;
+    _driveLimelightTrench = driveLimelightTrench;
     
     addRequirements(_intake, _magazine, _shooter, _transition);
   }
@@ -35,6 +39,7 @@ public class ShootMacro extends CommandBase {
   @Override
   public void initialize() {
     SmartDashboard.putBoolean("ShootMacro Running", true);
+    //CommandScheduler.getInstance().cancel(_driveLimelightTrench);
     //_shooterSpeed = SmartDashboard.getNumber("shooter speed (0-1)", .8);
 
   }
@@ -43,7 +48,7 @@ public class ShootMacro extends CommandBase {
   @Override
   public void execute() {
     _shooter.setShooter(_shooterSpeed);// was 0.75; this is the speed the shooter shoots
-    Timer.delay(.75);// time to spin shooter up; TODO: attempt to minimize time taken by this command
+    Timer.delay(1.25);// time to spin shooter up; TODO: attempt to minimize time taken by this command
     _transition.setTransitionMotor(-1);
     _magazine.setMagazine(1);
     _intake.setIntake(-0.8);

@@ -17,11 +17,11 @@ import frc.robot.subsystems.DriveSystemBase;
 
 public class SeekTarget extends CommandBase {
   DriveSystemBase _tankDrive;
-  double _x = -0.25;
+  double _x = 0.25;
   double _y = 0;
   double _z = 0;
   Timer _timer = new Timer();
-  double runTime = 0.8;
+  double runTime = 1;
   /**
    * Creates a new WaitForTarget.
    */

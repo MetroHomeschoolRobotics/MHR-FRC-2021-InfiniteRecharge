@@ -22,15 +22,15 @@ public class DriveLimelightTrench extends CommandBase {
 
   DriveSystemBase _tankDrive;
   NetworkTable _limelightTable;
-  double KpAim = -.05;//was .01
+  double KpAim = -.04;//was .01
   double KpDistance = -.1;
-  double min_aim_command = .05;
+  double min_aim_command = .055;
   double min_drive_command = .05;
   double aim_threshold = 1.5;
-  double max_aim_threshold = .1;
+  double max_aim_threshold = .09;
   boolean done = false;
   double distance_threshold = 1.5;
-  double tx_finishThreshold = 1;
+  double tx_finishThreshold = 1.35;
   double ty_finishThreshold = 1;
   int finished_times = 0;
   /**
@@ -46,11 +46,12 @@ public class DriveLimelightTrench extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    finished_times = 0;
     SmartDashboard.putBoolean("Beginning DriveLimelight", true);
         //change limelight to vision processing mode
         _limelightTable.getEntry("camMode").setNumber(0);
         _limelightTable.getEntry("ledMode").setNumber(3);
+        _limelightTable.getEntry("pipeline").setNumber(0);
         SmartDashboard.putBoolean("Lined Up", false);
   }
   // Called every time the scheduler runs while the command is scheduled.
@@ -75,7 +76,7 @@ public class DriveLimelightTrench extends CommandBase {
     }*/
     double distance_adjust = 0;
     if(tv == 0) {
-      steering_adjust = .25;
+      steering_adjust = -.25;
        distance_adjust = 0;
     } else {
     steering_adjust = KpAim*heading_error + min_drive_command;
@@ -118,8 +119,10 @@ _tankDrive.move(steering_adjust,distance_adjust,0);
     
     double tx = _limelightTable.getEntry("tx").getDouble(0.0);
     double ty = _limelightTable.getEntry("ty").getDouble(0.0);
-    if(finished_times> 50) {
+    if(finished_times> 25) {
+      _tankDrive.move(0,0,0);
       return true;
+      
     } else{
     if(ty!= 0 && tx!=0) {
       

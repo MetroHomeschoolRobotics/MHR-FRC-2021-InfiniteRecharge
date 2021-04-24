@@ -54,10 +54,10 @@ public class RunShooter extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(_manipulatorControl.getRawButton(5)){
+    /*if(_manipulatorControl.getRawButton(5)){
       return true;
-    } else {
+    } else {*/
     return false;
-  }
+  //}
 }
 }
