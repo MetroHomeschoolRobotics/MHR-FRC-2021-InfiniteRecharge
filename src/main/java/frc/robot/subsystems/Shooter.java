@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-
+import com.revrobotics.CANPIDController;
 //import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 //import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -22,6 +22,8 @@ public class Shooter extends SubsystemBase {
   public CANSparkMax _shooterMotor2;
   public Spark _hoodMotor;
   public AnalogPotentiometer _hoodPot;
+  private CANPIDController shooterMotor1PID;
+  private CANPIDController shooterMotor2PID;
   /**
    * Creates a new Shooter.
    */
@@ -30,6 +32,9 @@ public class Shooter extends SubsystemBase {
     _shooterMotor2 = shooterMotor2;
     _hoodMotor = hoodMotor;
     _hoodPot = hoodPot;
+    shooterMotor1PID = new CANPIDController(shooterMotor1);
+    shooterMotor2PID = new CANPIDController(shooterMotor2);
+    
     SmartDashboard.putBoolean("Shooter running", false);
   }
 
@@ -44,6 +49,11 @@ public void setHoodMotor(double speed) {
   _hoodMotor.set(speed);
 }
 
+
+public void setShooterRPM(double RPM) {
+  shooterMotor1PID.setReference(RPM, com.revrobotics.ControlType.kVelocity);
+  shooterMotor2PID.setReference(-RPM, com.revrobotics.ControlType.kVelocity);
+}
 
   public void setShooter(double speed){
     //Shooter motors are both negated on Version 3

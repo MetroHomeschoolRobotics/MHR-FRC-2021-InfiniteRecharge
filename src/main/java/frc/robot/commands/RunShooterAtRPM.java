@@ -10,9 +10,11 @@ import frc.robot.subsystems.Shooter;
 public class RunShooterAtRPM extends CommandBase {
   /** Creates a new RunShooterAtRPM. */
 private Shooter _shooter;
+private double _rpm;
   public RunShooterAtRPM(Shooter shooter, double rpm) {
     // Use addRequirements() here to declare subsystem dependencies.
     _shooter = shooter;
+    _rpm = rpm;
   }
 
   // Called when the command is initially scheduled.
@@ -22,7 +24,7 @@ private Shooter _shooter;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+_shooter.setShooterRPM(_rpm);
   }
 
   // Called once the command ends or is interrupted.
