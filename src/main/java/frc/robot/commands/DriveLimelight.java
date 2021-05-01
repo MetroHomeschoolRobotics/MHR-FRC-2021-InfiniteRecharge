@@ -19,21 +19,21 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class DriveLimelight extends CommandBase {
   //pull data from network tables (communication protocol)
-
-  DriveSystemBase _tankDrive;
-  NetworkTable _limelightTable;
-  double KpAim = -.04;//was .01
-  double KpDistance = -.05;
-  double min_aim_command = .01;
-  double min_drive_command = .01;
-  double aim_threshold = 1.5;
-  double max_aim_threshold = .04;
-  double max_drive_threshold= .05;
-  boolean done = false;
-  double distance_threshold = 1.5;
-  double tx_finishThreshold = 1.35;
-  double ty_finishThreshold = 1;
-  int finished_times = 0;
+//THIS NEXT LINE IS IMPORTANT
+//ACTUALLY FOR THE TRENCH
+DriveSystemBase _tankDrive;
+NetworkTable _limelightTable;
+double KpAim = -.04;//was .01
+double KpDistance = -.1;
+double min_aim_command = .055;
+double min_drive_command = .05;
+double aim_threshold = 1.5;
+double max_aim_threshold = .09;
+boolean done = false;
+double distance_threshold = 1.5;
+double tx_finishThreshold = 1.35;
+double ty_finishThreshold = 1;
+int finished_times = 0;
   /**
    * Creates a new DriveLimelight.
    */
@@ -52,7 +52,7 @@ public class DriveLimelight extends CommandBase {
         //change limelight to vision processing mode
         _limelightTable.getEntry("camMode").setNumber(0);
         _limelightTable.getEntry("ledMode").setNumber(3);
-        _limelightTable.getEntry("pipeline").setNumber(1);
+        _limelightTable.getEntry("pipeline").setNumber(0);
         SmartDashboard.putBoolean("Lined Up", false);
   }
   // Called every time the scheduler runs while the command is scheduled.
@@ -80,17 +80,12 @@ public class DriveLimelight extends CommandBase {
       steering_adjust = -.25;
        distance_adjust = 0;
     } else {
-    steering_adjust = KpAim*heading_error + min_aim_command;
+    steering_adjust = KpAim*heading_error + min_drive_command;
      distance_adjust = KpDistance*distance_error + min_drive_command;  
      if(steering_adjust>max_aim_threshold) {
       steering_adjust = max_aim_threshold;
     } else if(steering_adjust<-max_aim_threshold) {
       steering_adjust = -max_aim_threshold;
-    }
-    if(distance_adjust>max_drive_threshold) {
-      distance_adjust = max_drive_threshold;
-    } else if(distance_adjust <-max_drive_threshold) {
-      distance_adjust = -max_drive_threshold;
     }
   }
     
@@ -110,6 +105,7 @@ SmartDashboard.putNumber("Steering Adjust", steering_adjust);
     //_tankDrive.moveTank(-left_command, right_command);
 _tankDrive.move(steering_adjust,distance_adjust,0);
 //distance_adjust
+
   }
 
   // Called once the command ends or is interrupted.
@@ -125,7 +121,7 @@ _tankDrive.move(steering_adjust,distance_adjust,0);
     
     double tx = _limelightTable.getEntry("tx").getDouble(0.0);
     double ty = _limelightTable.getEntry("ty").getDouble(0.0);
-    if(finished_times> 5) {
+    if(finished_times> 25) {
       _tankDrive.move(0,0,0);
       return true;
       
@@ -145,4 +141,4 @@ return false;
 }
   }
 } 
-}
+} 
