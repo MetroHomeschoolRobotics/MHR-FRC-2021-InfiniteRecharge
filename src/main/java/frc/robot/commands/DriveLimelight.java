@@ -52,7 +52,7 @@ int finished_times = 0;
         //change limelight to vision processing mode
         _limelightTable.getEntry("camMode").setNumber(0);
         _limelightTable.getEntry("ledMode").setNumber(3);
-        _limelightTable.getEntry("pipeline").setNumber(0);
+        _limelightTable.getEntry("pipeline").setNumber(1);
         SmartDashboard.putBoolean("Lined Up", false);
   }
   // Called every time the scheduler runs while the command is scheduled.
