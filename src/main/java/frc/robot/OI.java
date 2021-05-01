@@ -121,7 +121,7 @@ public class OI {
     JoystickButton shootMacroButton = new JoystickButton(manipulatorControl, 1);
     //shootMacroButton.whileHeld(new ShootMacro(_intake, _magazine, _shooter, _transition, _driveLimelightTrench));
 
-//shootMacroButton.whileHeld(new SequentialCommandGroup(new RunShooterAtRPM(_shooter, 1000), new ParallelCommandGroup(new RunShooterAtRPM(_shooter, 1000), new RunIntake(_intake, driverControl), new RunMagazine(_magazine), new RunTransition(_transition))));
+shootMacroButton.whileHeld(new SequentialCommandGroup(new ParallelRaceGroup(new RunShooterAtRPM(_shooter, 1000), new WaitCommand(2.5), new RunMagazine(_magazine)), new ParallelRaceGroup(new RunShooterAtRPM(_shooter, 1000), new RunIntake(_intake, driverControl), new RunMagazine(_magazine), new RunTransition(_transition))));
 
     JoystickButton shootMacroTrenchButton = new JoystickButton(manipulatorControl, 1);
     shootMacroTrenchButton.whileHeld(new ShootMacroTrench(_intake, _magazine, _shooter, _transition, _driveLimelightTrench));
