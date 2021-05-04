@@ -32,8 +32,8 @@ public class Shooter extends SubsystemBase {
     _shooterMotor2 = shooterMotor2;
     _hoodMotor = hoodMotor;
     _hoodPot = hoodPot;
-    shooterMotor1PID = new CANPIDController(shooterMotor1);
-    shooterMotor2PID = new CANPIDController(shooterMotor2);
+    shooterMotor1PID = _shooterMotor1.getPIDController();
+    shooterMotor2PID = _shooterMotor2.getPIDController();
     
     SmartDashboard.putBoolean("Shooter running", false);
   }
