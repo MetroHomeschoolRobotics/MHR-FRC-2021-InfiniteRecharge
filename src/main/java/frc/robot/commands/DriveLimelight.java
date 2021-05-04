@@ -77,10 +77,10 @@ int finished_times = 0;
     }*/
     double distance_adjust = 0;
     if(tv == 0) {
-      steering_adjust = -.25;
+      //steering_adjust = -.25;
        distance_adjust = 0;
     } else {
-    steering_adjust = KpAim*heading_error + min_drive_command;
+    steering_adjust = KpAim*heading_error/* + min_drive_command*/;
      distance_adjust = KpDistance*distance_error + min_drive_command;  
      if(steering_adjust>max_aim_threshold) {
       steering_adjust = max_aim_threshold;
@@ -113,6 +113,7 @@ _tankDrive.move(steering_adjust,distance_adjust,0);
   public void end(boolean interrupted) {
     //_limelightTable.getEntry("camMode").setNumber(1);
     //_limelightTable.getEntry("ledMode").setNumber(1);
+    SmartDashboard.putBoolean("Lined Up", false);
   }
 
   // Returns true when the command should end.

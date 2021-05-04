@@ -8,6 +8,8 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANError;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -16,6 +18,10 @@ public class TankDrive extends DriveSystemBase {
   private CANSparkMax _frontRight;
   private CANSparkMax _rearLeft;
   private CANSparkMax _rearRight;
+  private CANEncoder _frontLeftEncoder;
+  private CANEncoder _frontRightEncoder;
+  private CANEncoder _rearLeftEncoder;
+  private CANEncoder _rearRightEncoder;
 
  // public TankDrive(TalonSRX frontLeft, TalonSRX frontRight, TalonSRX rearLeft, TalonSRX rearRight){
   public TankDrive(CANSparkMax frontLeft, CANSparkMax frontRight, CANSparkMax rearLeft, CANSparkMax rearRight){
@@ -23,6 +29,20 @@ public class TankDrive extends DriveSystemBase {
     _frontRight = frontRight;
     _rearLeft = rearLeft;
     _rearRight = rearRight;
+    _frontLeftEncoder = new CANEncoder(_frontLeft);
+    _frontRightEncoder = new CANEncoder(_frontRight);
+    _rearLeftEncoder = new CANEncoder(_rearLeft);
+    _rearRightEncoder = new CANEncoder(_rearRight);
+    _frontLeft.setSmartCurrentLimit(30, 40);
+    _frontLeft.burnFlash();
+    _frontRight.setSmartCurrentLimit(30, 40);
+    _frontRight.burnFlash();
+    _rearLeft.setSmartCurrentLimit(30, 40);
+    _rearLeft.burnFlash();
+    _rearRight.setSmartCurrentLimit(30, 40);
+    _rearRight.burnFlash();
+
+    
   }
   // @Override
   // public void initDefaultCommand() {

@@ -110,7 +110,7 @@ public class OI {
     targetButton.whileHeld(new DriveLimelightTrench(_tankDrive));
 
     JoystickButton removePinButton = new JoystickButton(driverControl, 8);
-    removePinButton.whileHeld(new RemoveClimberPin(_climber));
+    removePinButton.whileHeld(new RemoveClimberPin(_climber, driverControl));
 
     //JoystickButton targetWithHoodButton = new JoystickButton(driverControl, 2);
     //targetWithHoodButton.whileHeld(new DriveLimelight(_tankDrive, _shooter, false));
@@ -200,7 +200,7 @@ moveHopperButton.whenPressed(new MoveHopperDown(_magazine));
     }
 
     _autoChooser.setDefaultOption("3-ball", new SequentialCommandGroup(
-      new WaitCommand(0),
+      new WaitCommand(0.5),
       new DriveLimelightTrench(_tankDrive),
       new ShootMacro(_intake, _magazine, _shooter, _transition, _driveLimelightTrench),
       new AutoDriveTime(_tankDrive, 0, 0.25, 0, .25),
