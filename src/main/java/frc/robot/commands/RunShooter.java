@@ -43,7 +43,7 @@ public class RunShooter extends CommandBase {
   @Override
   public void execute() {
     double _batteryVoltage = RobotController.getBatteryVoltage();
-    _shooter.setShooter(_shooterSpeed/(_batteryVoltage/_regularVoltage));//was 0.75
+    _shooter.setShooter(_shooterSpeed/*(_batteryVoltage/_regularVoltage)*/);//was 0.75
   }
 
   // Called once the command ends or is interrupted.
