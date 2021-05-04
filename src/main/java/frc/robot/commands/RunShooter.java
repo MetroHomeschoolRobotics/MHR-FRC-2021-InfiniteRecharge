@@ -12,11 +12,13 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Shooter;
+import edu.wpi.first.wpilibj.RobotController;
 
 public class RunShooter extends CommandBase {
   private final Shooter _shooter;
   private final Joystick _manipulatorControl;
   private double _shooterSpeed = .62;
+  private double _regularVoltage = 12.5;
 
   /**
    * Creates a new RunShooter.
@@ -40,7 +42,8 @@ public class RunShooter extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _shooter.setShooter(_shooterSpeed);//was 0.75
+    double _batteryVoltage = RobotController.getBatteryVoltage();
+    _shooter.setShooter(_shooterSpeed/(_batteryVoltage/_regularVoltage));//was 0.75
   }
 
   // Called once the command ends or is interrupted.

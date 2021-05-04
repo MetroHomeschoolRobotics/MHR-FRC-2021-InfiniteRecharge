@@ -19,7 +19,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class DriveLimelightTrench extends CommandBase {
   //pull data from network tables (communication protocol)
-
+//THIS NEXT LINE IS IMPORTANT:
+  //ACTUALLY FOR OUR SECTOR
   DriveSystemBase _tankDrive;
   NetworkTable _limelightTable;
   double KpAim = -.04;//was .01
@@ -76,10 +77,10 @@ public class DriveLimelightTrench extends CommandBase {
     }*/
     double distance_adjust = 0;
     if(tv == 0) {
-      steering_adjust = -.25;
+      //steering_adjust = -.25;
        distance_adjust = 0;
     } else {
-    steering_adjust = KpAim*heading_error + min_drive_command;
+    steering_adjust = KpAim*heading_error/* + min_drive_command*/;
      distance_adjust = KpDistance*distance_error + min_drive_command;  
      if(steering_adjust>max_aim_threshold) {
       steering_adjust = max_aim_threshold;

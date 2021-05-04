@@ -6,14 +6,17 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Climber;
+import edu.wpi.first.wpilibj.Joystick;
 
 public class RemoveClimberPin extends CommandBase {
   /** Creates a new removeClimberPin. */
   private Climber _climber;
+  private Joystick _driverControl;
   private double speed = -.25;//TODO: make this proper numerical value
-  public RemoveClimberPin(Climber climber) {
+  public RemoveClimberPin(Climber climber, Joystick driverControl) {
     // Use addRequirements() here to declare subsystem dependencies.
     _climber = climber;
+    _driverControl = driverControl;
   }
 
   // Called when the command is initially scheduled.
@@ -24,7 +27,9 @@ public class RemoveClimberPin extends CommandBase {
   @Override
   public void execute() {
      //if(Timer.getMatchTime()<30) { //CHANGE THIS LATER BEFORE COMPETITION
+      if(_driverControl.getRawButton(7)) {
 _climber.runPinMotor(speed);
+      }
 //}
   }
 

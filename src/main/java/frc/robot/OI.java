@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -110,7 +110,7 @@ public class OI {
     targetButton.whileHeld(new DriveLimelightTrench(_tankDrive));
 
     JoystickButton removePinButton = new JoystickButton(driverControl, 8);
-    removePinButton.whileHeld(new RemoveClimberPin(_climber));
+    removePinButton.whileHeld(new RemoveClimberPin(_climber, driverControl));
 
     //JoystickButton targetWithHoodButton = new JoystickButton(driverControl, 2);
     //targetWithHoodButton.whileHeld(new DriveLimelight(_tankDrive, _shooter, false));
@@ -121,9 +121,9 @@ public class OI {
     JoystickButton shootMacroButton = new JoystickButton(manipulatorControl, 1);
     //shootMacroButton.whileHeld(new ShootMacro(_intake, _magazine, _shooter, _transition, _driveLimelightTrench));
 
-shootMacroButton.whileHeld(new SequentialCommandGroup(new ParallelRaceGroup(new RunShooterAtRPM(_shooter, 1000), new WaitCommand(2.5), new RunMagazine(_magazine)), new ParallelRaceGroup(new RunShooterAtRPM(_shooter, 1000), new RunIntake(_intake, driverControl), new RunMagazine(_magazine), new RunTransition(_transition))));
+shootMacroButton.whileHeld(new ParallelCommandGroup(new RunShooter(_shooter, manipulatorControl), new RunMagazine(_magazine)));
 
-    JoystickButton shootMacroTrenchButton = new JoystickButton(manipulatorControl, 1);
+    JoystickButton shootMacroTrenchButton = new JoystickButton(manipulatorControl, 2);
     shootMacroTrenchButton.whileHeld(new ShootMacroTrench(_intake, _magazine, _shooter, _transition, _driveLimelightTrench));
 
 
@@ -200,10 +200,14 @@ moveHopperButton.whenPressed(new MoveHopperDown(_magazine));
     }
 
     _autoChooser.setDefaultOption("3-ball", new SequentialCommandGroup(
-      new WaitCommand(0),
+      new WaitCommand(0.5),
       new DriveLimelightTrench(_tankDrive),
       new ShootMacro(_intake, _magazine, _shooter, _transition, _driveLimelightTrench),
-      new AutoDriveTime(_tankDrive, 0, -0.25, 0, .75)));
+      new AutoDriveTime(_tankDrive, 0, 0.25, 0, .25),
+      new AutoDriveTime(_tankDrive, .25, 0.25, 0, .8),
+      new AutoDriveTime(_tankDrive, 0,.3,0, 1),
+      new AutoDriveTime(_tankDrive, .25, .25,0, 1), 
+      new AutoDriveTime(_tankDrive, 0, -.5, 0, 1)));
       //new MoveIntake(_intakeLifter)));
     _autoChooser.addOption("5-ball", new SequentialCommandGroup(new ParallelRaceGroup(new SequentialCommandGroup(
         new MoveIntake(_intakeLifter),

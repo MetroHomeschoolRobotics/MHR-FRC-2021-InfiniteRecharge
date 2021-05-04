@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
 //import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
@@ -50,9 +51,10 @@ public void setHoodMotor(double speed) {
 }
 
 
-public void setShooterRPM(double RPM) {
-  shooterMotor1PID.setReference(RPM, com.revrobotics.ControlType.kVelocity);
-  shooterMotor2PID.setReference(-RPM, com.revrobotics.ControlType.kVelocity);
+public CANError setShooterRPM(double RPM) {
+  shooterMotor1PID.setReference(RPM, com.revrobotics.ControlType.kSmartVelocity);
+  //_shooterMotor1.set(shooterMotor1PID.ru)
+  return shooterMotor2PID.setReference(-RPM, com.revrobotics.ControlType.kSmartVelocity);
 }
 
   public void setShooter(double speed){

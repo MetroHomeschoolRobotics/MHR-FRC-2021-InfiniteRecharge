@@ -24,7 +24,7 @@ private double _rpm;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-_shooter.setShooterRPM(_rpm);
+System.out.println(_shooter.setShooterRPM(_rpm));
   }
 
   // Called once the command ends or is interrupted.

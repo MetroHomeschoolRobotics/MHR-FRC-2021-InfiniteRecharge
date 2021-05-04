@@ -24,6 +24,7 @@ public class IntakeLifter extends SubsystemBase {
     _intakeSolenoid1 = intakeSolenoid1;
     _intakeSolenoid2 = intakeSolenoid2;
     _compressor = compressor;
+    _compressor.setClosedLoopControl(false);
   }
 
   @Override
