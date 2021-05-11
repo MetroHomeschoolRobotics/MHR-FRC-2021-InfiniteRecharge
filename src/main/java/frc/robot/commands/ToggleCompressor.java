@@ -11,10 +11,10 @@ public class ToggleCompressor extends CommandBase {
   /** Creates a new ToggleCompressor. */
   private IntakeLifter _intakelifter;
   private boolean _state;
-  public ToggleCompressor(IntakeLifter intakelifter, boolean state) {
+  public ToggleCompressor(IntakeLifter intakelifter) {
     // Use addRequirements() here to declare subsystem dependencies.
     _intakelifter = intakelifter;
-    _state = state;
+    //_state = state;
   }
 
   // Called when the command is initially scheduled.
@@ -26,7 +26,7 @@ public class ToggleCompressor extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _intakelifter.setCompressor(_state);
+    _intakelifter.setCompressor(!_intakelifter.getCompressorState());
   }
 
   // Called once the command ends or is interrupted.

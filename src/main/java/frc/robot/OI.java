@@ -158,10 +158,10 @@ shootMacroButton.whileHeld(new ParallelCommandGroup(new RunShooter(_shooter, man
     POVButton magazineReverseButton2 = new POVButton(manipulatorControl, 315, 0);
     magazineReverseButton2.whileHeld(new ReverseMagazine(_magazine));
     
-    POVButton toggleCompressorOnButton = new POVButton(driverControl, 0, 0);
-    POVButton toggleCompressorOffButton = new POVButton(driverControl, 180, 0);
-    toggleCompressorOnButton.whenPressed(new ToggleCompressor(_intakeLifter, true));
-    toggleCompressorOffButton.whenPressed(new ToggleCompressor(_intakeLifter, false));
+    JoystickButton toggleCompressorButton = new JoystickButton(driverControl, 3);
+    //POVButton toggleCompressorOffButton = new POVButton(driverControl, 180, 0);
+    toggleCompressorButton.whenPressed(new ToggleCompressor(_intakeLifter));
+    //toggleCompressorOffButton.whenPressed(new ToggleCompressor(_intakeLifter, false));
     
     //POVButton liftControlPanelButton = new POVButton(manipulatorControl, 0, 0);
     //liftControlPanelButton.whileHeld(new LiftControlPanel(_controlPanelLift));
